@@ -1,0 +1,9 @@
+
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "ai-tool-maker-pro",
+  "compatibility_date": "2026-11-03",
+  "assets": {
+    "directory": "./"
+  }
+}
