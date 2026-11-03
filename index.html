@@ -1,0 +1,212 @@
+
+<!DOCTYPE html>
+<html lang="ur" dir="auto">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#101322">
+<title>AI Tool Maker Pro</title>
+<style>
+:root {
+  --bg:#0b1020;
+  --panel:#171f35;
+  --text:#f5f7ff;
+  --muted:#aebbd5;
+  --accent:#8065ff;
+  --border:#303c59;
+}
+*{box-sizing:border-box}
+body {
+  margin:0;
+  background:radial-gradient(circle at top,#26305a,#0b1020 65%);
+  color:var(--text);
+  font-family:system-ui,Arial,sans-serif;
+  min-height:100vh;
+}
+.wrap{max-width:850px;margin:auto;padding:22px 15px}
+header{text-align:center;padding:25px 0}
+.logo{font-size:45px}
+h1{font-size:clamp(30px,6vw,45px);margin:5px}
+h1 span{color:#a998ff}
+header p,.muted{color:var(--muted)}
+.card{
+  background:var(--panel);
+  border:1px solid var(--border);
+  border-radius:20px;
+  padding:22px;
+  margin-bottom:18px;
+}
+h2{margin-top:0}
+label{display:block;margin:15px 0 8px;font-weight:bold}
+textarea,select{
+  width:100%;
+  padding:15px;
+  border:1px solid var(--border);
+  border-radius:12px;
+  background:#0b1428;
+  color:white;
+  font:inherit;
+}
+textarea{min-height:155px;resize:vertical}
+button{
+  border:0;
+  border-radius:12px;
+  padding:14px 20px;
+  background:linear-gradient(120deg,#805cff,#388be9);
+  color:white;
+  font-size:16px;
+  font-weight:bold;
+  cursor:pointer;
+}
+button:disabled{opacity:.5;cursor:wait}
+.actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:15px}
+.secondary{background:#293650}
+.result{
+  background:#0b1428;
+  border:1px solid var(--border);
+  border-radius:14px;
+  padding:18px;
+  min-height:100px;
+  white-space:pre-wrap;
+  overflow-wrap:anywhere;
+  line-height:1.8;
+  margin-top:15px;
+}
+.status{margin-top:12px;color:#a9e9c7;font-size:14px}
+footer{text-align:center;color:var(--muted);padding:20px;font-size:13px}
+@media(max-width:450px){
+  .card{padding:16px}
+  .actions button{width:100%}
+}
+</style>
+</head>
+<body>
+<main class="wrap">
+
+<header>
+  <div class="logo">🤖</div>
+  <h1>AI <span>Tool Maker Pro</span></h1>
+  <p>آپ کا اپنا حقیقی AI اسسٹنٹ</p>
+  <p>Powered by Cloudflare Workers AI</p>
+</header>
+
+<section class="card">
+  <h2>✨ اپنا AI اسسٹنٹ استعمال کریں</h2>
+  <p class="muted">اپنا سوال لکھیں اور حقیقی AI سے جواب حاصل کریں۔</p>
+
+  <label for="language">جواب کی زبان</label>
+  <select id="language">
+    <option value="same">سوال والی زبان</option>
+    <option value="ur">اردو</option>
+    <option value="en">English</option>
+  </select>
+
+  <label for="prompt">اپنا سوال لکھیں</label>
+  <textarea id="prompt" placeholder="مثلاً میرے لیے ایک نیا AI ٹول بنانے کا طریقہ بتائیں..."></textarea>
+
+  <div class="actions">
+    <button id="askBtn">✨ AI سے جواب حاصل کریں</button>
+    <button id="clearBtn" class="secondary">صاف کریں</button>
+  </div>
+
+  <div id="status" class="status" role="status"></div>
+
+  <h2 style="margin-top:24px">📩 AI کا جواب</h2>
+  <div id="result" class="result" aria-live="polite">
+    آپ کا AI جواب یہاں ظاہر ہوگا۔
+  </div>
+</section>
+
+<footer>
+  AI Tool Maker Pro • Cloudflare Workers AI
+</footer>
+
+</main>
+
+<script>
+(function(){
+
+const promptBox=document.getElementById("prompt");
+const language=document.getElementById("language");
+const askBtn=document.getElementById("askBtn");
+const clearBtn=document.getElementById("clearBtn");
+const result=document.getElementById("result");
+const status=document.getElementById("status");
+
+async function askAI(){
+
+const prompt=promptBox.value.trim();
+
+if(!prompt){
+  status.textContent="براہ کرم پہلے اپنا سوال لکھیں۔";
+  return;
+}
+
+askBtn.disabled=true;
+askBtn.textContent="AI جواب تیار کر رہا ہے...";
+status.textContent="Cloudflare AI سے رابطہ ہو رہا ہے...";
+result.textContent="براہ کرم انتظار کریں...";
+
+try{
+
+const response=await fetch("/api/chat",{
+  method:"POST",
+  headers:{"Content-Type":"application/json"},
+  body:JSON.stringify({
+    prompt:prompt,
+    language:language.value
+  })
+});
+
+let data;
+
+try{
+  data=await response.json();
+}catch{
+  throw new Error("سرور سے درست جواب نہیں ملا۔");
+}
+
+if(!response.ok){
+  throw new Error(data.error || "AI درخواست ناکام ہوگئی۔");
+}
+
+if(!data.answer){
+  throw new Error("AI نے خالی جواب دیا۔");
+}
+
+result.textContent=data.answer;
+status.textContent="✅ حقیقی AI کا جواب موصول ہوگیا۔";
+
+}catch(error){
+
+result.textContent="خرابی: "+error.message;
+status.textContent="AI سے رابطہ کامیاب نہیں ہوا۔";
+
+}finally{
+
+askBtn.disabled=false;
+askBtn.textContent="✨ AI سے جواب حاصل کریں";
+
+}
+
+}
+
+askBtn.addEventListener("click",askAI);
+
+promptBox.addEventListener("keydown",function(event){
+  if(event.key==="Enter" && !event.shiftKey){
+    event.preventDefault();
+    askAI();
+  }
+});
+
+clearBtn.addEventListener("click",function(){
+  promptBox.value="";
+  result.textContent="آپ کا AI جواب یہاں ظاہر ہوگا۔";
+  status.textContent="";
+});
+
+})();
+</script>
+</body>
+</html>
