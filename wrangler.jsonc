@@ -1,0 +1,16 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "ai-tool-maker-pro",
+  "main": "./worker.js",
+  "compatibility_date": "2026-11-03",
+  "assets": {
+    "directory": "./",
+    "binding": "ASSETS",
+    "run_worker_first": [
+      "/api/*"
+    ]
+  },
+  "ai": {
+    "binding": "AI"
+  }
+}
