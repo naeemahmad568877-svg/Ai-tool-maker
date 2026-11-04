@@ -128,4 +128,62 @@ $("projectSearch").oninput=refresh;$("runTests").onclick=runTests;$("publishProj
 $("exportBtn").onclick=()=>{let blob=new Blob([JSON.stringify({app:"AI Tool Maker Pro",version:6,exportedAt:new Date().toISOString(),projects:all()},null,2)],{type:"application/json"}),url=URL.createObjectURL(blob),a=document.createElement("a");a.href=url;a.download="ai-tool-maker-v6-backup.json";document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),1200)};
 $("importBtn").onclick=()=>$("importFile").click();$("importFile").onchange=async e=>{let f=e.target.files?.[0];if(!f)return;try{let j=JSON.parse(await f.text()),incoming=Array.isArray(j)?j:j.projects;if(!Array.isArray(incoming))throw Error("invalid");let a=all(),ids=new Set(a.map(x=>x.id)),n=0;for(let p of incoming){if(p&&p.id&&p.title&&!ids.has(p.id)){p.endpoint=p.endpoint||DEFAULT_ENDPOINT;p.html=makeToolHTML(p);a.push(p);ids.add(p.id);n++}}if(store(a)){refresh();alert(n+" پروجیکٹس درآمد ہوگئے۔")}}catch(_){alert("یہ درست بیک اپ فائل نہیں۔")}e.target.value=""};
 refresh();
+<style>
+textarea, input {
+  user-select: text !important;
+  -webkit-user-select: text !important;
+  -webkit-touch-callout: default !important;
+}
+
+.ai-paste-btn {
+  background: #7657ff;
+  color: white;
+  border: 0;
+  border-radius: 10px;
+  padding: 12px 20px;
+  margin: 8px 0;
+  font-size: 16px;
+  font-weight: bold;
+  cursor: pointer;
+}
+</style>
+
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+  const fields = document.querySelectorAll("textarea");
+
+  fields.forEach(function(field) {
+    const btn = document.createElement("button");
+    btn.type = "button";
+    btn.className = "ai-paste-btn";
+    btn.textContent = "📋 Paste / پیسٹ کریں";
+
+    field.insertAdjacentElement("afterend", btn);
+
+    btn.addEventListener("click", async function() {
+      try {
+        const text = await navigator.clipboard.readText();
+
+        if (!text) {
+          alert("Clipboard خالی ہے۔");
+          return;
+        }
+
+        const start = field.selectionStart ?? field.value.length;
+        const end = field.selectionEnd ?? field.value.length;
+
+        field.setRangeText(text, start, end, "end");
+        field.dispatchEvent(new Event("input", {
+          bubbles: true
+        }));
+
+        field.focus();
+      } catch (error) {
+        alert("Paste کے لیے باکس پر انگلی رکھیں اور Paste منتخب کریں۔");
+      }
+    });
+  });
+});
+</script>
+
 </script></body></html>
