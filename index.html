@@ -1,0 +1,3419 @@
+<!DOCTYPE html>
+<html lang="ur" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#101322">
+
+<title>AI Tool Maker Pro 8.2</title>
+
+<style>
+:root{
+--bg:#101322;
+--panel:#191e32;
+--panel2:#222943;
+--text:#f5f7ff;
+--muted:#aeb8d2;
+--line:#394362;
+--accent:#8b7cff;
+--mint:#45d6b5;
+--danger:#ff7588;
+}
+
+*{
+box-sizing:border-box;
+}
+
+body{
+margin:0;
+background:
+radial-gradient(circle at 10% 0%,#29254c,transparent 35%),
+var(--bg);
+font-family:system-ui,Arial,sans-serif;
+color:var(--text);
+line-height:1.7;
+}
+
+.wrap{
+max-width:1150px;
+margin:auto;
+padding:12px;
+}
+
+header{
+display:flex;
+justify-content:space-between;
+align-items:center;
+gap:10px;
+flex-wrap:wrap;
+padding:12px 0;
+}
+
+.logo{
+background:linear-gradient(135deg,var(--accent),var(--mint));
+color:#101322;
+padding:8px 14px;
+border-radius:13px;
+font-weight:900;
+font-size:21px;
+}
+
+.badge{
+background:#153b36;
+color:#9df4d8;
+border:1px solid #42695f;
+padding:5px 10px;
+border-radius:20px;
+}
+
+.hero{
+text-align:center;
+padding:18px 5px;
+}
+
+.hero h1{
+font-size:clamp(25px,5vw,38px);
+margin:0;
+}
+
+.gradient{
+background:linear-gradient(90deg,#a69aff,#5ce7c2);
+color:transparent;
+background-clip:text;
+-webkit-background-clip:text;
+}
+
+.muted,
+.small{
+color:var(--muted);
+}
+
+.small{
+font-size:13px;
+}
+
+.notice{
+background:#152b32;
+border-right:4px solid var(--mint);
+padding:12px;
+border-radius:10px;
+margin-bottom:12px;
+}
+
+.tabs{
+display:flex;
+gap:7px;
+flex-wrap:wrap;
+margin:15px 0;
+}
+
+.tab,
+.btn{
+border:0;
+border-radius:11px;
+padding:10px 13px;
+font:inherit;
+cursor:pointer;
+}
+
+.tab{
+background:var(--panel);
+border:1px solid var(--line);
+color:white;
+}
+
+.tab.active{
+background:var(--accent);
+color:#101322;
+font-weight:bold;
+}
+
+.card{
+background:linear-gradient(145deg,#202741,#191e32);
+border:1px solid var(--line);
+border-radius:16px;
+padding:16px;
+margin-bottom:14px;
+}
+
+label{
+display:block;
+font-weight:bold;
+margin:12px 0 5px;
+}
+
+input,
+textarea,
+select{
+width:100%;
+padding:12px;
+border:1px solid #465174;
+border-radius:11px;
+background:#11172a;
+color:white;
+font:inherit;
+user-select:text;
+-webkit-user-select:text;
+}
+
+textarea{
+min-height:120px;
+resize:vertical;
+}
+
+.btn{
+background:var(--accent);
+color:#101322;
+font-weight:bold;
+}
+
+.btn.secondary{
+background:#303a59;
+color:white;
+border:1px solid var(--line);
+}
+
+.btn.green{
+background:var(--mint);
+}
+
+.btn.danger{
+background:var(--danger);
+}
+
+.btn:disabled{
+opacity:.5;
+cursor:not-allowed;
+}
+
+.actions{
+display:flex;
+gap:8px;
+flex-wrap:wrap;
+margin-top:12px;
+}
+
+.grid{
+display:grid;
+grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
+gap:12px;
+}
+
+.tool,
+.stat{
+background:#11172a;
+border:1px solid var(--line);
+border-radius:12px;
+padding:13px;
+}
+
+.tool h3{
+margin:5px 0;
+}
+
+.tool p{
+overflow-wrap:anywhere;
+color:var(--muted);
+}
+
+.row{
+display:grid;
+grid-template-columns:1fr 1fr;
+gap:12px;
+}
+
+.hidden{
+display:none!important;
+}
+
+.status{
+background:#153b36;
+color:#9df4d8;
+padding:10px;
+border-radius:9px;
+margin:8px 0;
+overflow-wrap:anywhere;
+}
+
+.error{
+background:#3b1e2a!important;
+color:#ffb8c4!important;
+}
+
+.warning{
+background:#3b2b17;
+color:#ffdda0;
+}
+
+.output{
+white-space:pre-wrap;
+overflow-wrap:anywhere;
+min-height:100px;
+background:#11172a;
+border:1px solid var(--line);
+border-radius:12px;
+padding:14px;
+}
+
+.preview{
+background:white;
+border-radius:12px;
+overflow:hidden;
+margin-top:12px;
+}
+
+.preview iframe{
+width:100%;
+height:650px;
+border:0;
+}
+
+.paste-btn{
+display:block;
+margin:5px 0 10px;
+padding:9px 13px;
+background:#29224f;
+color:white;
+border:1px solid #6255b8;
+border-radius:8px;
+cursor:pointer;
+font:inherit;
+}
+
+.paste-btn:active{
+transform:scale(.98);
+}
+
+.footer{
+text-align:center;
+color:var(--muted);
+padding:20px;
+}
+
+.codebox{
+background:#080b14;
+border:1px solid var(--line);
+padding:12px;
+border-radius:10px;
+font-family:monospace;
+white-space:pre-wrap;
+overflow:auto;
+direction:ltr;
+text-align:left;
+}
+
+.feature{
+display:flex;
+gap:10px;
+align-items:flex-start;
+background:#11172a;
+border:1px solid var(--line);
+padding:12px;
+border-radius:12px;
+margin-top:10px;
+}
+
+.feature b{
+display:block;
+margin-bottom:2px;
+}
+
+@media(max-width:650px){
+
+.wrap{
+padding:9px;
+}
+
+.row{
+grid-template-columns:1fr;
+}
+
+.card{
+padding:12px;
+}
+
+.tab,
+.btn{
+padding:9px 11px;
+}
+
+}
+</style>
+</head>
+
+<body>
+
+<div class="wrap">
+
+<header>
+
+<div class="logo">
+✦ AI Tool Maker
+</div>
+
+<span class="badge">
+PRO BUILDER • VERSION 8.2 AI
+</span>
+
+</header>
+
+
+<section class="hero">
+
+<h1>
+<span class="gradient">
+اپنا AI ٹول بنائیں
+</span>
+</h1>
+
+<p class="muted">
+صرف عام زبان میں بتائیں کہ آپ کیا بنانا چاہتے ہیں۔
+AI آپ کے لیے مکمل HTML/CSS/JavaScript Tool تیار کرے گا۔
+</p>
+
+</section>
+
+
+<div class="notice">
+
+<b>🤖 حقیقی AI Backend</b>
+
+<br>
+
+Cloudflare Worker کے ذریعے AI سے Tool Generation فعال ہے۔
+
+<br>
+
+<span class="small">
+Endpoint: /api/chat
+</span>
+
+</div>
+
+
+<nav class="tabs">
+
+<button class="tab active" data-page="core">
+🧠 AI Core
+</button>
+
+<button class="tab" data-page="generator">
+🚀 AI Tool Generator
+</button>
+
+<button class="tab" data-page="smart">
+✨ Smart Builder
+</button>
+
+<button class="tab" data-page="video">
+🎬 Video Creator
+</button>
+
+<button class="tab" data-page="projects">
+📁 Projects
+</button>
+
+<button class="tab" data-page="testing">
+🧪 Testing
+</button>
+
+<button class="tab" data-page="backup">
+💾 Backup
+</button>
+
+</nav>
+
+
+<!-- =========================
+     AI CORE
+========================= -->
+
+<section id="core" class="page">
+
+<div class="card">
+
+<h2>
+🧠 AI Core Engine
+</h2>
+
+<p class="muted">
+یہاں AI سے براہِ راست بات کریں اور کسی بھی قسم کا کام کروائیں۔
+</p>
+
+<label>
+AI کو ہدایت دیں
+</label>
+
+<textarea
+id="coreRequest"
+placeholder="مثلاً ایک AI Resume Builder بناؤ جو نام، تعلیم، تجربہ اور Skills لے کر خوبصورت Resume تیار کرے۔"
+></textarea>
+
+
+<div class="row">
+
+<div>
+
+<label>
+جواب کی زبان
+</label>
+
+<select id="coreLanguage">
+
+<option>اردو</option>
+<option>English</option>
+<option>اردو اور English</option>
+
+</select>
+
+</div>
+
+
+<div>
+
+<label>
+AI Task
+</label>
+
+<select id="coreTask">
+
+<option value="chat">
+AI Chat
+</option>
+
+<option value="generate_app">
+App Generator
+</option>
+
+<option value="code">
+Code Generator
+</option>
+
+<option value="video">
+Video Creator
+</option>
+
+<option value="writer">
+AI Writer
+</option>
+
+</select>
+
+</div>
+
+</div>
+
+
+<label>
+Cloudflare Worker Endpoint
+</label>
+
+<input
+id="coreEndpoint"
+value="https://ai-tool-maker-backed.naveedahmad568344.workers.dev/api/chat"
+>
+
+
+<div class="actions">
+
+<button
+class="btn"
+id="runCore">
+🤖 AI چلائیں
+</button>
+
+<button
+class="btn secondary"
+id="testConnection">
+🔌 Backend Test
+</button>
+
+</div>
+
+
+<div
+id="apiStatus"
+class="status">
+Backend ابھی ٹیسٹ نہیں ہوا۔
+</div>
+
+
+<div
+id="coreOutput"
+class="output">
+AI کا جواب یہاں آئے گا۔
+</div>
+
+</div>
+
+</section>
+
+
+<!-- =========================
+     AI TOOL GENERATOR
+========================= -->
+
+<section id="generator" class="page hidden">
+
+<div class="card">
+
+<h2>
+🚀 AI Tool Generator
+</h2>
+
+<p class="muted">
+آپ صرف اپنی ضرورت عام زبان میں لکھیں۔
+AI اسی ضرورت کے مطابق مکمل Tool بنائے گا۔
+</p>
+
+
+<div class="feature">
+
+<div>🤖</div>
+
+<div>
+
+<b>حقیقی AI Generation</b>
+
+<span class="small">
+AI آپ کے Prompt کو سمجھ کر HTML/CSS/JavaScript بنائے گا۔
+</span>
+
+</div>
+
+</div>
+
+
+<div class="feature">
+
+<div>🚫</div>
+
+<div>
+
+<b>کوئی Default Calculator نہیں</b>
+
+<span class="small">
+AI صرف وہی Tool بنائے گا جو آپ Prompt میں مانگیں گے۔
+</span>
+
+</div>
+
+</div>
+
+
+<label>
+ٹول کا نام
+</label>
+
+<input
+id="appName"
+placeholder="مثلاً AI Resume Builder"
+>
+
+
+<label>
+آپ کیا بنانا چاہتے ہیں؟
+</label>
+
+<textarea
+id="appPrompt"
+placeholder="مثلاً ایک professional AI Resume Builder بناؤ جو user سے نام، تعلیم، skills اور experience لے اور خوبصورت CV تیار کرے۔"
+></textarea>
+
+
+<button
+type="button"
+class="paste-btn"
+id="pastePrompt">
+📋 Clipboard سے Paste کریں
+</button>
+
+
+<div class="row">
+
+<div>
+
+<label>
+UI زبان
+</label>
+
+<select id="appLanguage">
+
+<option>اردو</option>
+<option>English</option>
+<option>اردو اور English</option>
+
+</select>
+
+</div>
+
+
+<div>
+
+<label>
+Tool Type
+</label>
+
+<select id="appType">
+
+<option value="general">
+General AI Tool
+</option>
+
+<option value="video">
+Video Creator
+</option>
+
+<option value="chatbot">
+AI Chatbot
+</option>
+
+<option value="translator">
+Translator
+</option>
+
+<option value="writer">
+AI Writer
+</option>
+
+<option value="image">
+Image Tool
+</option>
+
+<option value="code">
+Code Tool
+</option>
+
+<option value="business">
+Business Tool
+</option>
+
+<option value="education">
+Education Tool
+</option>
+
+<option value="productivity">
+Productivity Tool
+</option>
+
+</select>
+
+</div>
+
+</div>
+
+
+<div class="actions">
+
+<button
+class="btn"
+id="generateApp">
+🤖 حقیقی AI سے Tool بنائیں
+</button>
+
+<button
+class="btn secondary"
+id="clearPrompt">
+🧹 صاف کریں
+</button>
+
+</div>
+
+
+<div
+id="generatorStatus"
+class="status">
+AI Tool تیار کرنے کے لیے Prompt لکھیں۔
+</div>
+
+
+<div
+id="generatedInfo"
+class="output">
+Generated HTML یہاں دکھایا جائے گا۔
+</div>
+
+
+<div
+id="generatorActions"
+class="actions hidden">
+
+<button
+class="btn green"
+id="saveGenerated">
+💾 Project محفوظ کریں
+</button>
+
+<button
+class="btn secondary"
+id="previewGenerated">
+👁️ Preview
+</button>
+
+<button
+class="btn secondary"
+id="downloadGenerated">
+⬇️ HTML Download
+</button>
+
+</div>
+
+
+<div
+id="generatedPreview"
+class="preview hidden">
+</div>
+
+</div>
+
+</section>
+
+
+<!-- =========================
+     SMART BUILDER
+========================= -->
+
+<section id="smart" class="page hidden">
+
+<div class="card">
+
+<h2>
+✨ Smart AI Builder
+</h2>
+
+<label>
+Project Name
+</label>
+
+<input
+id="smartName"
+placeholder="مثلاً میرا AI Tool"
+>
+
+
+<label>
+کیا بنانا چاہتے ہیں؟
+</label>
+
+<textarea
+id="smartRequest"
+placeholder="مثلاً ایک AI Study Planner بناؤ جو طالب علم کے subjects، وقت اور goals کے مطابق study plan بنائے۔"
+></textarea>
+
+
+<div class="row">
+
+<div>
+
+<label>
+Tool Type
+</label>
+
+<select id="smartKind">
+
+<option value="general">
+General
+</option>
+
+<option value="video">
+Video
+</option>
+
+<option value="chatbot">
+Chatbot
+</option>
+
+<option value="writer">
+Writer
+</option>
+
+<option value="translator">
+Translator
+</option>
+
+<option value="image">
+Image
+</option>
+
+<option value="code">
+Code
+</option>
+
+</select>
+
+</div>
+
+
+<div>
+
+<label>
+Design Style
+</label>
+
+<select id="smartStyle">
+
+<option>
+Modern
+</option>
+
+<option>
+Professional
+</option>
+
+<option>
+Minimal
+</option>
+
+<option>
+Dark AI
+</option>
+
+<option>
+Glassmorphism
+</option>
+
+</select>
+
+</div>
+
+</div>
+
+
+<div class="actions">
+
+<button
+class="btn"
+id="smartBuild">
+✨ AI App بنائیں
+</button>
+
+</div>
+
+
+<div
+id="smartStatus"
+class="status">
+تیار۔
+</div>
+
+
+<div
+id="smartOutput"
+class="output">
+نتیجہ یہاں آئے گا۔
+</div>
+
+</div>
+
+</section>
+
+
+<!-- =========================
+     VIDEO CREATOR
+========================= -->
+
+<section id="video" class="page hidden">
+
+<div class="card">
+
+<h2>
+🎬 AI Video Creator
+</h2>
+
+<p class="muted">
+AI سے video script، scenes، voice-over اور production plan تیار کریں۔
+</p>
+
+
+<label>
+ویڈیو کا موضوع
+</label>
+
+<textarea
+id="videoTopic"
+placeholder="مثلاً ایک غریب لڑکے کی کامیابی کی کہانی"
+></textarea>
+
+
+<button
+type="button"
+class="paste-btn"
+id="pasteVideo">
+📋 Clipboard سے Paste کریں
+</button>
+
+
+<div class="row">
+
+<div>
+
+<label>
+دورانیہ
+</label>
+
+<select id="videoDuration">
+
+<option>
+30 سیکنڈ
+</option>
+
+<option>
+1 منٹ
+</option>
+
+<option>
+3 منٹ
+</option>
+
+<option>
+5 منٹ
+</option>
+
+<option>
+10 منٹ
+</option>
+
+</select>
+
+</div>
+
+
+<div>
+
+<label>
+Platform
+</label>
+
+<select id="videoPlatform">
+
+<option>
+YouTube
+</option>
+
+<option>
+TikTok
+</option>
+
+<option>
+Facebook
+</option>
+
+<option>
+Instagram
+</option>
+
+</select>
+
+</div>
+
+</div>
+
+
+<label>
+ویڈیو انداز
+</label>
+
+<select id="videoStyle">
+
+<option>
+سنیماٹک
+</option>
+
+<option>
+تعلیمی
+</option>
+
+<option>
+مزاحیہ
+</option>
+
+<option>
+ڈاکیومنٹری
+</option>
+
+<option>
+شارٹ فلم
+</option>
+
+</select>
+
+
+<div class="actions">
+
+<button
+class="btn"
+id="makeVideo">
+🎬 AI Video Plan بنائیں
+</button>
+
+<button
+class="btn secondary"
+id="downloadVideo">
+⬇️ Download
+</button>
+
+</div>
+
+
+<div
+id="videoStatus"
+class="status">
+موضوع لکھیں اور AI Video Plan بنائیں۔
+</div>
+
+
+<div
+id="videoOutput"
+class="output">
+Video plan یہاں آئے گا۔
+</div>
+
+</div>
+
+</section>
+
+
+<!-- =========================
+     PROJECTS
+========================= -->
+
+<section id="projects" class="page hidden">
+
+<div class="card">
+
+<h2>
+📁 Projects
+</h2>
+
+
+<label>
+Project تلاش کریں
+</label>
+
+<input
+id="projectSearch"
+placeholder="Project کا نام تلاش کریں"
+>
+
+
+<div
+id="projectStats"
+class="grid"
+style="margin-top:12px">
+</div>
+
+
+<div
+id="projectGrid"
+class="grid"
+style="margin-top:12px">
+</div>
+
+</div>
+
+</section>
+
+
+<!-- =========================
+     TESTING
+========================= -->
+
+<section id="testing" class="page hidden">
+
+<div class="card">
+
+<h2>
+🧪 Testing & Publishing
+</h2>
+
+
+<label>
+Project منتخب کریں
+</label>
+
+<select id="testProject">
+</select>
+
+
+<div class="actions">
+
+<button
+class="btn"
+id="runTests">
+🧪 Test Project
+</button>
+
+<button
+class="btn green"
+id="publishProject">
+⬇️ HTML Download
+</button>
+
+</div>
+
+
+<div
+id="testResults"
+class="output">
+Test results یہاں آئیں گے۔
+</div>
+
+</div>
+
+</section>
+
+
+<!-- =========================
+     BACKUP
+========================= -->
+
+<section id="backup" class="page hidden">
+
+<div class="card">
+
+<h2>
+💾 Backup & Restore
+</h2>
+
+
+<div class="actions">
+
+<button
+class="btn green"
+id="exportBackup">
+⬇️ Backup Download
+</button>
+
+<button
+class="btn secondary"
+id="importBackup">
+📥 Backup Import
+</button>
+
+<input
+id="backupFile"
+type="file"
+accept=".json"
+class="hidden"
+>
+
+</div>
+
+</div>
+
+</section>
+
+
+<footer class="footer">
+
+AI Tool Maker Pro 8.2 • Real AI Edition
+
+</footer>
+
+</div>
+
+
+<script>
+"use strict";
+
+
+/* =========================================================
+   CONFIGURATION
+========================================================= */
+
+const WORKER =
+"https://ai-tool-maker-backed.naveedahmad568344.workers.dev";
+
+const DEFAULT_ENDPOINT =
+WORKER + "/api/chat";
+
+const STORE =
+"aitoolmaker_projects_v82";
+
+let generatedHTML = "";
+let generatedProject = null;
+let lastVideo = "";
+
+
+/* =========================================================
+   HELPER
+========================================================= */
+
+function $(id){
+return document.getElementById(id);
+}
+
+
+function uid(){
+
+return Date.now().toString(36) +
+Math.random().toString(36).slice(2,8);
+
+}
+
+
+function escapeHTML(str){
+
+return String(str ?? "")
+.replace(/[&<>"']/g,function(c){
+
+return {
+"&":"&amp;",
+"<":"&lt;",
+">":"&gt;",
+'"':"&quot;",
+"'":"&#39;"
+}[c];
+
+});
+
+}
+
+
+function getProjects(){
+
+try{
+
+const data =
+JSON.parse(
+localStorage.getItem(STORE) || "[]"
+);
+
+return Array.isArray(data)
+? data
+: [];
+
+}catch(e){
+
+return [];
+
+}
+
+}
+
+
+function saveProjects(data){
+
+try{
+
+localStorage.setItem(
+STORE,
+JSON.stringify(data)
+);
+
+return true;
+
+}catch(e){
+
+alert(
+"Browser storage full ہے۔"
+);
+
+return false;
+
+}
+
+}
+
+
+function downloadFile(
+filename,
+content,
+type="text/plain;charset=utf-8"
+){
+
+const blob =
+new Blob(
+[content],
+{type:type}
+);
+
+const url =
+URL.createObjectURL(blob);
+
+const a =
+document.createElement("a");
+
+a.href=url;
+a.download=filename;
+
+document.body.appendChild(a);
+
+a.click();
+
+a.remove();
+
+setTimeout(function(){
+
+URL.revokeObjectURL(url);
+
+},1500);
+
+}
+
+
+/* =========================================================
+   CLIPBOARD / PASTE
+========================================================= */
+
+async function pasteInto(field){
+
+if(!field)return;
+
+field.focus();
+
+try{
+
+if(
+navigator.clipboard &&
+navigator.clipboard.readText
+){
+
+const text =
+await navigator.clipboard.readText();
+
+if(text){
+
+const start =
+field.selectionStart ??
+field.value.length;
+
+const end =
+field.selectionEnd ??
+field.value.length;
+
+if(field.setRangeText){
+
+field.setRangeText(
+text,
+start,
+end,
+"end"
+);
+
+}else{
+
+field.value += text;
+
+}
+
+field.dispatchEvent(
+new Event(
+"input",
+{bubbles:true}
+)
+);
+
+return;
+
+}
+
+}
+
+}catch(error){
+
+console.log(
+"Clipboard API unavailable",
+error
+);
+
+}
+
+alert(
+"Clipboard permission نہیں ملی۔\n\n" +
+"Text box میں انگلی سے تھوڑی دیر دبائیں " +
+"اور Paste منتخب کریں۔"
+);
+
+}
+
+
+$("pastePrompt").onclick=function(){
+
+pasteInto(
+$("appPrompt")
+);
+
+};
+
+
+$("pasteVideo").onclick=function(){
+
+pasteInto(
+$("videoTopic")
+);
+
+};
+
+
+/* =========================================================
+   REAL AI CONNECTION
+========================================================= */
+
+async function callAI(
+prompt,
+language="اردو",
+task="generate",
+toolType="general"
+){
+
+const endpoint =
+(
+$("coreEndpoint")?.value ||
+DEFAULT_ENDPOINT
+).trim();
+
+
+if(
+!endpoint.startsWith("https://")
+){
+
+throw Error(
+"HTTPS Worker URL درست کریں۔"
+);
+
+}
+
+
+const controller =
+new AbortController();
+
+
+const timer =
+setTimeout(function(){
+
+controller.abort();
+
+},90000);
+
+
+try{
+
+const response =
+await fetch(
+endpoint,
+{
+
+method:"POST",
+
+headers:{
+"Content-Type":"application/json"
+},
+
+body:JSON.stringify({
+
+prompt:String(prompt),
+
+language:String(language),
+
+task:String(task),
+
+toolType:String(toolType)
+
+}),
+
+signal:controller.signal
+
+}
+);
+
+
+const raw =
+await response.text();
+
+
+let data=null;
+
+
+try{
+
+data=JSON.parse(raw);
+
+}catch(e){
+
+data=null;
+
+}
+
+
+if(!response.ok){
+
+if(data){
+
+throw Error(
+data.error ||
+data.message ||
+"HTTP " +
+response.status
+);
+
+}
+
+throw Error(
+"HTTP " +
+response.status +
+": " +
+raw.slice(0,300)
+);
+
+}
+
+
+let output="";
+
+
+if(data){
+
+output =
+data.output ??
+data.answer ??
+data.result ??
+data.response ??
+data.text ??
+data.content ??
+"";
+
+
+if(
+typeof output === "object"
+){
+
+output =
+JSON.stringify(
+output,
+null,
+2
+);
+
+}
+
+}else{
+
+output=raw;
+
+}
+
+
+if(
+!String(output).trim()
+){
+
+throw Error(
+"AI نے خالی جواب دیا۔"
+);
+
+}
+
+
+return String(output);
+
+
+}catch(e){
+
+if(
+e.name==="AbortError"
+){
+
+throw Error(
+"AI جواب میں 90 سیکنڈ سے زیادہ وقت لگا۔"
+);
+
+}
+
+
+if(
+e instanceof TypeError
+){
+
+throw Error(
+"Network/CORS مسئلہ۔ Cloudflare Worker URL یا CORS چیک کریں۔"
+);
+
+}
+
+
+throw e;
+
+
+}finally{
+
+clearTimeout(timer);
+
+}
+
+}
+
+
+/* =========================================================
+   HTML EXTRACTION
+========================================================= */
+
+function extractHTML(text){
+
+let s =
+String(text || "").trim();
+
+
+const fenced =
+s.match(
+/```(?:html)?\s*([\s\S]*?)```/i
+);
+
+
+if(fenced){
+
+s=fenced[1].trim();
+
+}
+
+
+const lower =
+s.toLowerCase();
+
+
+const doctype =
+lower.indexOf(
+"<!doctype html>"
+);
+
+
+const htmlStart =
+lower.indexOf(
+"<html"
+);
+
+
+if(doctype >= 0){
+
+s=s.slice(doctype);
+
+}else if(htmlStart >= 0){
+
+s=s.slice(htmlStart);
+
+}
+
+
+const end =
+s.toLowerCase().lastIndexOf(
+"</html>"
+);
+
+
+if(end >= 0){
+
+s=s.slice(
+0,
+end+7
+);
+
+}
+
+
+const check =
+s.toLowerCase();
+
+
+if(
+!check.includes("<html") ||
+!check.includes("<script") ||
+!check.includes("</html>")
+){
+
+return "";
+
+}
+
+
+return s;
+
+}
+
+
+/* =========================================================
+   AI APP GENERATOR
+========================================================= */
+
+async function generateFullApp(
+name,
+request,
+type,
+language
+){
+
+const instruction = `
+
+You are the main AI engine of an AI Tool Maker platform.
+
+The user wants you to CREATE A REAL WORKING WEB TOOL.
+
+IMPORTANT:
+
+The user's requested tool is the priority.
+
+DO NOT automatically create a calculator.
+
+DO NOT change the user's requested idea into another app.
+
+DO NOT assume the user wants a calculator.
+
+Only create a calculator if the user explicitly asks for a calculator.
+
+If the user asks for a video creator,
+create a video creator.
+
+If the user asks for a resume builder,
+create a resume builder.
+
+If the user asks for a chatbot,
+create a chatbot.
+
+If the user asks for a translator,
+create a translator.
+
+If the user asks for another type of tool,
+create exactly that type of tool.
+
+Return ONLY complete HTML source code.
+
+Do not explain anything.
+
+Do not return JSON.
+
+Do not return Markdown.
+
+Do not use code fences.
+
+The result MUST start with:
+
+<!DOCTYPE html>
+
+The result MUST end with:
+
+</html>
+
+The application MUST contain:
+
+1. HTML
+2. CSS
+3. JavaScript
+
+The application must:
+
+- work in a normal browser
+- be mobile responsive
+- have a professional modern UI
+- have useful working interactions
+- contain buttons and forms where appropriate
+- validate user input
+- show useful results
+- work without external API keys when possible
+- use vanilla HTML/CSS/JavaScript
+- not pretend that an unavailable external API is working
+- provide a useful browser-side implementation when external services are unavailable
+
+IMPORTANT:
+
+Do not create unrelated features.
+
+Do not replace the requested app with a calculator.
+
+Do not generate a generic demo unless the user specifically asks for one.
+
+User language:
+${language}
+
+Application name:
+${name}
+
+Application type:
+${type}
+
+USER REQUEST:
+${request}
+
+Now create the complete working application.
+`;
+
+
+const raw =
+await callAI(
+instruction,
+language,
+"generate_complete_html",
+type
+);
+
+
+const html =
+extractHTML(raw);
+
+
+if(!html){
+
+throw Error(
+"AI نے مکمل HTML App نہیں دی۔ دوبارہ کوشش کریں۔"
+);
+
+}
+
+
+return html;
+
+}
+
+
+/* =========================================================
+   GENERATE APP BUTTON
+========================================================= */
+
+$("generateApp").onclick =
+async function(){
+
+const name =
+$("appName").value.trim();
+
+const request =
+$("appPrompt").value.trim();
+
+const language =
+$("appLanguage").value;
+
+const type =
+$("appType").value;
+
+
+if(!name){
+
+alert(
+"Tool کا نام لکھیں۔"
+);
+
+return;
+
+}
+
+
+if(!request){
+
+alert(
+"اپنا Prompt لکھیں۔"
+);
+
+return;
+
+}
+
+
+const btn =
+$("generateApp");
+
+
+btn.disabled=true;
+
+btn.textContent=
+"🤖 AI Tool بنا رہا ہے...";
+
+
+$("generatorStatus")
+.classList.remove("error");
+
+
+$("generatorStatus").textContent=
+"Cloudflare AI آپ کے Prompt کے مطابق Tool تیار کر رہا ہے...";
+
+
+$("generatedInfo").textContent=
+"AI کام کر رہا ہے، براہ کرم انتظار کریں...";
+
+
+$("generatorActions")
+.classList.add("hidden");
+
+
+$("generatedPreview")
+.classList.add("hidden");
+
+
+try{
+
+generatedHTML =
+await generateFullApp(
+name,
+request,
+type,
+language
+);
+
+
+generatedProject={
+
+id:uid(),
+
+title:name,
+
+request:request,
+
+type:type,
+
+html:generatedHTML,
+
+createdAt:
+new Date().toISOString()
+
+};
+
+
+$("generatorStatus").textContent=
+"✅ AI نے آپ کا مکمل Tool تیار کر دیا۔";
+
+
+$("generatedInfo").textContent=
+"✅ مکمل HTML App تیار ہے۔\n\n" +
+"HTML Size: " +
+generatedHTML.length +
+" characters";
+
+
+$("generatorActions")
+.classList.remove("hidden");
+
+
+}catch(e){
+
+$("generatorStatus")
+.classList.add("error");
+
+
+$("generatorStatus").textContent=
+"❌ AI Tool Generation Failed:\n" +
+e.message;
+
+
+$("generatedInfo").textContent=
+"مسئلہ:\n" +
+e.message +
+"\n\nدوبارہ کوشش کریں۔";
+
+}finally{
+
+btn.disabled=false;
+
+btn.textContent=
+"🤖 حقیقی AI سے Tool بنائیں";
+
+}
+
+};
+
+
+/* =========================================================
+   SAVE GENERATED
+========================================================= */
+
+$("saveGenerated").onclick =
+function(){
+
+if(!generatedProject){
+
+alert(
+"پہلے AI Tool بنائیں۔"
+);
+
+return;
+
+}
+
+
+const projects =
+getProjects();
+
+
+projects.unshift(
+generatedProject
+);
+
+
+if(
+saveProjects(projects)
+){
+
+refreshProjects();
+
+refreshTestProjects();
+
+alert(
+"✅ AI Tool Project محفوظ ہوگیا۔"
+);
+
+}
+
+};
+
+
+/* =========================================================
+   PREVIEW
+========================================================= */
+
+$("previewGenerated").onclick =
+function(){
+
+if(!generatedHTML){
+
+alert(
+"پہلے AI Tool بنائیں۔"
+);
+
+return;
+
+}
+
+
+const box =
+$("generatedPreview");
+
+
+box.classList.remove(
+"hidden"
+);
+
+
+const iframe =
+document.createElement(
+"iframe"
+);
+
+
+iframe.setAttribute(
+"sandbox",
+"allow-scripts allow-forms allow-modals"
+);
+
+
+iframe.srcdoc =
+generatedHTML;
+
+
+box.replaceChildren(
+iframe
+);
+
+};
+
+
+/* =========================================================
+   DOWNLOAD GENERATED
+========================================================= */
+
+$("downloadGenerated").onclick =
+function(){
+
+if(!generatedHTML){
+
+alert(
+"پہلے AI Tool بنائیں۔"
+);
+
+return;
+
+}
+
+
+const name =
+(
+$("appName").value.trim() ||
+"ai-tool"
+)
+.replace(
+/[^\w\-آ-ی ]/g,
+""
+)
+.replace(
+/\s+/g,
+"-"
+);
+
+
+downloadFile(
+name + ".html",
+generatedHTML,
+"text/html;charset=utf-8"
+);
+
+};
+
+
+/* =========================================================
+   AI CORE
+========================================================= */
+
+$("runCore").onclick =
+async function(){
+
+const prompt =
+$("coreRequest").value.trim();
+
+
+if(!prompt){
+
+alert(
+"AI instruction لکھیں۔"
+);
+
+return;
+
+}
+
+
+$("apiStatus")
+.classList.remove(
+"error"
+);
+
+
+$("apiStatus").textContent=
+"🤖 AI سے رابطہ ہو رہا ہے...";
+
+
+$("coreOutput").textContent=
+"AI جواب تیار کر رہا ہے...";
+
+
+try{
+
+const result =
+await callAI(
+
+prompt,
+
+$("coreLanguage").value,
+
+$("coreTask").value,
+
+"general"
+
+);
+
+
+$("coreOutput").textContent =
+result;
+
+
+$("apiStatus").textContent=
+"✅ حقیقی AI Backend کامیاب۔";
+
+
+}catch(e){
+
+$("apiStatus")
+.classList.add(
+"error"
+);
+
+
+$("apiStatus").textContent=
+"❌ Backend Failed: " +
+e.message;
+
+
+$("coreOutput").textContent=
+e.message;
+
+}
+
+};
+
+
+/* =========================================================
+   BACKEND TEST
+========================================================= */
+
+$("testConnection").onclick =
+async function(){
+
+$("apiStatus")
+.classList.remove(
+"error"
+);
+
+
+$("apiStatus").textContent=
+"🔌 Backend Test ہو رہا ہے...";
+
+
+try{
+
+const result =
+await callAI(
+
+"Reply with exactly: AI BACKEND OK",
+
+"English",
+
+"connection_test",
+
+"general"
+
+);
+
+
+$("apiStatus").textContent=
+"✅ Backend کامیاب: " +
+result.slice(0,120);
+
+
+}catch(e){
+
+$("apiStatus")
+.classList.add(
+"error"
+);
+
+
+$("apiStatus").textContent=
+"❌ Backend Failed: " +
+e.message;
+
+}
+
+};
+
+
+/* =========================================================
+   SMART BUILDER
+========================================================= */
+
+$("smartBuild").onclick =
+async function(){
+
+const name =
+$("smartName").value.trim();
+
+const request =
+$("smartRequest").value.trim();
+
+const type =
+$("smartKind").value;
+
+const style =
+$("smartStyle").value;
+
+
+if(
+!name ||
+!request
+){
+
+alert(
+"Project name اور request دونوں لکھیں۔"
+);
+
+return;
+
+}
+
+
+const btn =
+$("smartBuild");
+
+
+btn.disabled=true;
+
+btn.textContent=
+"🤖 AI App بنا رہا ہے...";
+
+
+$("smartStatus")
+.classList.remove(
+"error"
+);
+
+
+$("smartStatus").textContent=
+"AI آپ کی ضرورت کے مطابق App تیار کر رہا ہے...";
+
+
+$("smartOutput").textContent=
+"انتظار کریں...";
+
+
+try{
+
+const enhancedRequest = `
+
+Create this exact tool:
+
+${request}
+
+Design style:
+${style}
+
+Do not change the requested tool type.
+
+Do not create a calculator unless explicitly requested.
+
+Make the application functional and mobile responsive.
+
+`;
+
+
+const html =
+await generateFullApp(
+
+name,
+
+enhancedRequest,
+
+type,
+
+"اردو"
+
+);
+
+
+const project={
+
+id:uid(),
+
+title:name,
+
+request:request,
+
+type:type,
+
+html:html,
+
+createdAt:
+new Date().toISOString()
+
+};
+
+
+const projects =
+getProjects();
+
+
+projects.unshift(
+project
+);
+
+
+saveProjects(
+projects
+);
+
+
+refreshProjects();
+
+refreshTestProjects();
+
+
+generatedHTML=html;
+
+generatedProject=project;
+
+
+$("smartStatus").textContent=
+"✅ AI App تیار اور محفوظ ہوگئی۔";
+
+
+$("smartOutput").textContent=
+"مکمل AI HTML App تیار ہوگئی۔\n\n" +
+"HTML Size: " +
+html.length +
+" characters";
+
+
+}catch(e){
+
+$("smartStatus")
+.classList.add(
+"error"
+);
+
+
+$("smartStatus").textContent=
+"❌ AI Error: " +
+e.message;
+
+
+$("smartOutput").textContent=
+e.message;
+
+}finally{
+
+btn.disabled=false;
+
+btn.textContent=
+"✨ AI App بنائیں";
+
+}
+
+};
+
+
+/* =========================================================
+   VIDEO CREATOR
+========================================================= */
+
+$("makeVideo").onclick =
+async function(){
+
+const topic =
+$("videoTopic").value.trim();
+
+
+if(!topic){
+
+alert(
+"ویڈیو کا موضوع لکھیں۔"
+);
+
+return;
+
+}
+
+
+const btn =
+$("makeVideo");
+
+
+btn.disabled=true;
+
+btn.textContent=
+"🎬 AI کام کر رہا ہے...";
+
+
+$("videoStatus")
+.classList.remove(
+"error"
+);
+
+
+$("videoStatus").textContent=
+"AI Video Plan تیار کر رہا ہے...";
+
+
+$("videoOutput").textContent=
+"انتظار کریں...";
+
+
+try{
+
+lastVideo =
+await callAI(
+
+`Create a professional video production plan.
+
+Topic:
+${topic}
+
+Duration:
+${$("videoDuration").value}
+
+Platform:
+${$("videoPlatform").value}
+
+Style:
+${$("videoStyle").value}
+
+Include:
+
+1. Strong Hook
+2. Complete Voice-over
+3. Scene-by-scene breakdown
+4. Characters
+5. Locations
+6. Camera shots
+7. Camera movement
+8. On-screen text
+9. Sound effects
+10. Background music
+11. Ending
+12. Call to action
+
+Write the result in Urdu.
+
+`,
+
+"اردو",
+
+"video_creator",
+
+"video"
+
+);
+
+
+$("videoStatus").textContent=
+"✅ AI Video Plan تیار ہوگیا۔";
+
+
+$("videoOutput").textContent=
+lastVideo;
+
+
+}catch(e){
+
+$("videoStatus")
+.classList.add(
+"error"
+);
+
+
+$("videoStatus").textContent=
+"❌ Video AI Error: " +
+e.message;
+
+
+$("videoOutput").textContent=
+e.message;
+
+}finally{
+
+btn.disabled=false;
+
+btn.textContent=
+"🎬 AI Video Plan بنائیں";
+
+}
+
+};
+
+
+/* =========================================================
+   DOWNLOAD VIDEO PLAN
+========================================================= */
+
+$("downloadVideo").onclick =
+function(){
+
+if(!lastVideo){
+
+alert(
+"پہلے Video Plan بنائیں۔"
+);
+
+return;
+
+}
+
+
+downloadFile(
+"ai-video-plan.txt",
+lastVideo
+);
+
+};
+
+
+/* =========================================================
+   PROJECTS
+========================================================= */
+
+function refreshProjects(){
+
+const projects =
+getProjects();
+
+
+const q =
+(
+$("projectSearch")?.value ||
+""
+).toLowerCase();
+
+
+if($("projectStats")){
+
+$("projectStats").innerHTML=`
+
+<div class="stat">
+
+<b>
+${projects.length}
+</b>
+
+<br>
+
+کل Projects
+
+</div>
+
+
+<div class="stat">
+
+<b>
+${projects.filter(
+p=>p.html
+).length}
+</b>
+
+<br>
+
+HTML Apps
+
+</div>
+
+
+<div class="stat">
+
+<b>
+${new Set(
+projects.map(
+p=>p.type
+)
+).size}
+</b>
+
+<br>
+
+Tool Types
+
+</div>
+
+`;
+
+}
+
+
+if(!$("projectGrid")){
+
+return;
+
+}
+
+
+const filtered =
+projects.filter(
+p=>
+
+(
+(p.title || "") +
+" " +
+(p.request || "") +
+" " +
+(p.type || "")
+)
+.toLowerCase()
+.includes(q)
+
+);
+
+
+if(!filtered.length){
+
+$("projectGrid").innerHTML=
+
+`<div class="status">
+
+ابھی کوئی AI Project موجود نہیں۔
+
+</div>`;
+
+return;
+
+}
+
+
+$("projectGrid").innerHTML =
+
+filtered.map(
+p=>`
+
+<div class="tool">
+
+<h3>
+${escapeHTML(
+p.title
+)}
+</h3>
+
+
+<p>
+Type:
+${escapeHTML(
+p.type || "general"
+)}
+</p>
+
+
+<p>
+${escapeHTML(
+(p.request || "")
+.slice(0,180)
+)}
+</p>
+
+
+<div class="actions">
+
+<button
+class="btn secondary"
+data-preview="${escapeHTML(p.id)}">
+
+👁️ Preview
+
+</button>
+
+
+<button
+class="btn secondary"
+data-download="${escapeHTML(p.id)}">
+
+⬇️ HTML
+
+</button>
+
+
+<button
+class="btn danger"
+data-delete="${escapeHTML(p.id)}">
+
+حذف
+
+</button>
+
+</div>
+
+</div>
+
+`
+).join("");
+
+}
+
+
+$("projectSearch").oninput =
+refreshProjects;
+
+
+/* =========================================================
+   PROJECT ACTIONS
+========================================================= */
+
+document.addEventListener(
+"click",
+function(e){
+
+const preview =
+e.target.closest(
+"[data-preview]"
+);
+
+
+const download =
+e.target.closest(
+"[data-download]"
+);
+
+
+const del =
+e.target.closest(
+"[data-delete]"
+);
+
+
+if(preview){
+
+const p =
+getProjects().find(
+x=>
+x.id ===
+preview.dataset.preview
+);
+
+
+if(!p)return;
+
+
+if(!p.html){
+
+alert(
+"HTML موجود نہیں۔"
+);
+
+return;
+
+}
+
+
+const win =
+window.open(
+"",
+"_blank"
+);
+
+
+if(win){
+
+win.document.open();
+
+win.document.write(
+p.html
+);
+
+win.document.close();
+
+}
+
+}
+
+
+if(download){
+
+const p =
+getProjects().find(
+x=>
+x.id ===
+download.dataset.download
+);
+
+
+if(!p)return;
+
+
+downloadFile(
+
+(
+p.title ||
+"ai-tool"
+) + ".html",
+
+p.html || "",
+
+"text/html;charset=utf-8"
+
+);
+
+}
+
+
+if(del){
+
+if(
+!confirm(
+"کیا یہ AI Project حذف کرنا ہے؟"
+)
+){
+
+return;
+
+}
+
+
+const data =
+getProjects().filter(
+p=>
+p.id !==
+del.dataset.delete
+);
+
+
+saveProjects(
+data
+);
+
+
+refreshProjects();
+
+refreshTestProjects();
+
+}
+
+}
+);
+
+
+/* =========================================================
+   TESTING
+========================================================= */
+
+function refreshTestProjects(){
+
+const select =
+$("testProject");
+
+
+if(!select)return;
+
+
+const projects =
+getProjects();
+
+
+if(!projects.length){
+
+select.innerHTML=
+`<option value="">
+کوئی Project نہیں
+</option>`;
+
+return;
+
+}
+
+
+select.innerHTML =
+
+projects.map(
+p=>`
+
+<option value="${escapeHTML(p.id)}">
+
+${escapeHTML(p.title)}
+
+</option>
+
+`
+).join("");
+
+}
+
+
+function runTests(){
+
+const projects =
+getProjects();
+
+
+if(!projects.length){
+
+$("testResults").textContent=
+"کوئی Project موجود نہیں۔";
+
+return;
+
+}
+
+
+const selected =
+$("testProject").value;
+
+
+const p =
+projects.find(
+x=>x.id===selected
+) ||
+projects[0];
+
+
+const html =
+p.html || "";
+
+
+const tests=[
+
+[
+"Project موجود ہے",
+!!p
+],
+
+[
+"HTML موجود ہے",
+html.toLowerCase()
+.includes("<html")
+],
+
+[
+"DOCTYPE موجود ہے",
+html.toLowerCase()
+.includes(
+"<!doctype html"
+)
+],
+
+[
+"CSS موجود ہے",
+html.includes("<style")
+],
+
+[
+"JavaScript موجود ہے",
+html.includes("<script")
+],
+
+[
+"HTML closing tag",
+html.toLowerCase()
+.includes("</html>")
+],
+
+[
+"Mobile viewport",
+html.toLowerCase()
+.includes("viewport")
+]
+
+];
+
+
+$("testResults").innerHTML =
+
+tests.map(
+t=>`
+
+<div class="status ${
+t[1] ? "" : "error"
+}">
+
+${t[1] ? "✅" : "❌"}
+
+${t[0]}
+
+</div>
+
+`
+).join("")
+
++
+
+`
+
+<p>
+
+<b>
+${tests.filter(
+x=>x[1]
+).length}/${tests.length}
+</b>
+
+tests کامیاب۔
+
+</p>
+
+`;
+
+}
+
+
+$("runTests").onclick =
+runTests;
+
+
+/* =========================================================
+   PUBLISH
+========================================================= */
+
+$("publishProject").onclick =
+function(){
+
+const projects =
+getProjects();
+
+
+if(!projects.length){
+
+alert(
+"کوئی AI Project موجود نہیں۔"
+);
+
+return;
+
+}
+
+
+const selected =
+$("testProject").value;
+
+
+const p =
+projects.find(
+x=>x.id===selected
+) ||
+projects[0];
+
+
+if(!p.html){
+
+alert(
+"اس Project میں HTML نہیں ہے۔"
+);
+
+return;
+
+}
+
+
+downloadFile(
+
+(
+p.title ||
+"ai-tool"
+) + ".html",
+
+p.html,
+
+"text/html;charset=utf-8"
+
+);
+
+};
+
+
+/* =========================================================
+   BACKUP EXPORT
+========================================================= */
+
+$("exportBackup").onclick =
+function(){
+
+const data={
+
+version:"8.2",
+
+createdAt:
+new Date().toISOString(),
+
+projects:
+getProjects()
+
+};
+
+
+downloadFile(
+
+"ai-tool-maker-pro-8-backup.json",
+
+JSON.stringify(
+data,
+null,
+2
+),
+
+"application/json"
+
+);
+
+};
+
+
+/* =========================================================
+   BACKUP IMPORT
+========================================================= */
+
+$("importBackup").onclick =
+function(){
+
+$("backupFile").click();
+
+};
+
+
+$("backupFile").onchange =
+async function(e){
+
+const file =
+e.target.files?.[0];
+
+
+if(!file)return;
+
+
+try{
+
+const json =
+JSON.parse(
+await file.text()
+);
+
+
+const incoming =
+Array.isArray(json)
+? json
+: json.projects;
+
+
+if(!Array.isArray(incoming)){
+
+throw Error(
+"Invalid backup"
+);
+
+}
+
+
+const old =
+getProjects();
+
+
+const ids =
+new Set(
+old.map(
+p=>p.id
+)
+);
+
+
+let added=0;
+
+
+for(
+const p of incoming
+){
+
+if(
+p &&
+p.id &&
+p.title &&
+!ids.has(p.id)
+){
+
+old.push(p);
+
+ids.add(p.id);
+
+added++;
+
+}
+
+}
+
+
+saveProjects(old);
+
+refreshProjects();
+
+refreshTestProjects();
+
+
+alert(
+added +
+" Projects import ہوگئے۔"
+);
+
+
+}catch(err){
+
+alert(
+"Backup file درست نہیں۔"
+);
+
+}
+
+
+e.target.value="";
+
+};
+
+
+/* =========================================================
+   NAVIGATION
+========================================================= */
+
+document.querySelectorAll(
+".tab"
+).forEach(
+btn=>{
+
+btn.onclick =
+function(){
+
+const page =
+btn.dataset.page;
+
+
+document.querySelectorAll(
+".tab"
+).forEach(
+x=>
+
+x.classList.toggle(
+"active",
+x===btn
+)
+
+);
+
+
+document.querySelectorAll(
+".page"
+).forEach(
+x=>
+
+x.classList.toggle(
+"hidden",
+x.id!==page
+)
+
+);
+
+
+if(
+page==="projects"
+){
+
+refreshProjects();
+
+}
+
+
+if(
+page==="testing"
+){
+
+refreshTestProjects();
+
+}
+
+};
+
+}
+);
+
+
+/* =========================================================
+   CLEAR PROMPT
+========================================================= */
+
+$("clearPrompt").onclick =
+function(){
+
+$("appPrompt").value="";
+
+
+$("generatedInfo").textContent=
+"Generated HTML یہاں دکھایا جائے گا۔";
+
+
+$("generatorStatus").textContent=
+"AI Tool تیار کرنے کے لیے Prompt لکھیں۔";
+
+
+$("generatorStatus")
+.classList.remove(
+"error"
+);
+
+
+$("generatorActions")
+.classList.add(
+"hidden"
+);
+
+
+$("generatedPreview")
+.classList.add(
+"hidden"
+);
+
+
+generatedHTML="";
+
+generatedProject=null;
+
+};
+
+
+/* =========================================================
+   START
+========================================================= */
+
+refreshProjects();
+
+refreshTestProjects();
+
+</script>
+
+</body>
+</html>
