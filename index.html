@@ -1,0 +1,121 @@
+async function generateUniversal(){
+
+const title=$("uniName").value.trim();
+const req=$("uniPurpose").value.trim();
+
+if(!title||!req){
+alert("ٹول کا نام اور مقصد لکھیں۔");
+return;
+}
+
+const b=$("generateUniversal");
+b.disabled=true;
+b.textContent="AI ٹول تیار کر رہا ہے...";
+
+$("uniResult").classList.remove("hidden");
+$("uniSummary").textContent="AI سے مکمل ٹول تیار کیا جا رہا ہے...";
+$("uniDetails").textContent="انتظار کریں...";
+
+try{
+
+const prompt=`
+You are an expert AI web app builder.
+
+Create a COMPLETE, FUNCTIONAL, SINGLE-FILE HTML web application.
+
+IMPORTANT:
+- Return the COMPLETE HTML document.
+- Start with <!DOCTYPE html>
+- Include HTML, CSS and JavaScript.
+- Do NOT return a feature plan only.
+- Do NOT explain anything outside the HTML.
+- Do NOT leave placeholders such as "add code here".
+- The application must work on mobile.
+- Use a modern professional UI.
+- If AI functionality is needed, use the provided backend endpoint.
+- The generated application must be usable by a normal user.
+
+APP NAME:
+${title}
+
+APP PURPOSE:
+${req}
+
+APP TYPE:
+${$("uniType").value}
+
+DESIGN COLOR:
+${$("uniStyle").value}
+
+Create the complete HTML now.
+`;
+
+const ai=await callAI(
+prompt,
+$("coreLanguage").value,
+"generate_html_tool",
+$("uniType").value
+);
+
+let html=extractCompleteHTML(ai);
+
+/*
+اگر AI نے مکمل HTML دیا تو وہ استعمال ہوگا۔
+اگر AI نے صرف plan دیا تو fallback HTML بنایا جائے گا۔
+*/
+if(!html){
+
+const fallback=newProject(
+title,
+req,
+$("uniType").value,
+"helpful",
+$("uniStyle").value
+);
+
+fallback.aiSpecification=ai;
+fallback.html=makeToolHTML(fallback);
+
+universalDraft=fallback;
+
+$("uniSummary").textContent=
+"AI نے مکمل HTML نہیں دیا، اس لیے working HTML خود تیار کر دیا گیا۔";
+
+$("uniDetails").textContent=
+fallback.html;
+
+}else{
+
+universalDraft=newProject(
+title,
+req,
+$("uniType").value,
+"helpful",
+$("uniStyle").value
+);
+
+universalDraft.aiSpecification=ai;
+universalDraft.html=html;
+
+$("uniSummary").textContent=
+"✅ مکمل HTML AI سے تیار ہوگیا۔";
+
+$("uniDetails").textContent=html;
+}
+
+}catch(e){
+
+$("uniSummary").textContent=
+"❌ AI کنکشن/جنریشن ناکام: "+e.message;
+
+$("uniDetails").textContent=
+"Backend URL اور Cloudflare Worker response چیک کریں۔";
+
+}finally{
+
+b.disabled=false;
+b.textContent="AI سے ٹول بنائیں";
+
+}
+
+}
