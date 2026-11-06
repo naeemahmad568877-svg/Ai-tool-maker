@@ -1,0 +1,298 @@
+<!doctype html>
+<html lang="ur">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="theme-color" content="#0b1020">
+  <meta name="description" content="AI Tool Maker Pro 9 - Build custom tools from prompts with AI.">
+  <title>AI Tool Maker Pro 9</title>
+  <style>
+    :root{color-scheme:dark;--bg:#090e1c;--panel:#141d32;--panel2:#0e1628;--line:#2a3857;--text:#f4f6ff;--muted:#aab6d0;--accent:#8b78ff;--good:#7de0c0;--bad:#ff9caa}
+    *{box-sizing:border-box}
+    body{margin:0;background:radial-gradient(ellipse at top,#172044 0,#090e1c 55%);color:var(--text);font:16px/1.65 system-ui,-apple-system,"Noto Nastaliq Urdu",sans-serif}
+    .wrap{width:min(920px,100%);margin:auto;padding:22px 14px 44px}
+    .hero,.panel{background:rgba(20,29,50,.96);border:1px solid var(--line);border-radius:20px;padding:20px;margin-bottom:16px;box-shadow:0 12px 36px #0003}
+    .tag{display:inline-block;border:1px solid #51478f;background:#29244e;color:#d7d0ff;padding:4px 11px;border-radius:30px;font-size:12px;font-weight:800;letter-spacing:.4px}
+    h1{font-size:clamp(25px,6vw,36px);line-height:1.3;margin:10px 0;color:#c2b8ff}
+    h2{font-size:20px;margin:0 0 10px}
+    p{color:var(--muted);margin:7px 0}
+    .hint{font-size:13px;color:var(--muted)}
+    label{display:block;font-weight:750;margin:14px 0 7px}
+    textarea,select{width:100%;border:1px solid var(--line);background:var(--panel2);color:var(--text);border-radius:14px;padding:14px;font:inherit;outline:none}
+    textarea{min-height:135px;resize:vertical}
+    textarea:focus,select:focus{border-color:var(--accent);box-shadow:0 0 0 3px #8b78ff22}
+    button{border:1px solid var(--line);border-radius:12px;padding:11px 15px;background:#263451;color:white;font:inherit;font-weight:750;cursor:pointer}
+    button:active{transform:translateY(1px)}
+    button:disabled{opacity:.55;cursor:wait}
+    .primary{width:100%;margin-top:13px;background:linear-gradient(120deg,#8b78ff,#6654d8);border:0;font-size:17px}
+    .row{display:flex;gap:9px;flex-wrap:wrap}
+    .row button{flex:1;min-width:120px}
+    .status{min-height:27px;margin-top:10px;font-size:14px;color:var(--good)}
+    .status.error{color:var(--bad)}
+    .answer{white-space:pre-wrap;overflow-wrap:anywhere;background:#0a1222;border:1px solid var(--line);border-radius:14px;padding:15px;min-height:110px;max-height:520px;overflow:auto;line-height:1.75}
+    .hidden{display:none!important}
+    .section-head{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap}
+    .tools{display:flex;gap:8px;flex-wrap:wrap}
+    .tools button{font-size:13px;padding:8px 11px}
+    .preview{width:100%;height:520px;border:1px solid var(--line);border-radius:14px;background:white}
+    .history{display:grid;gap:10px;margin-top:12px}
+    .bubble{padding:12px 14px;border-radius:14px;white-space:pre-wrap;overflow-wrap:anywhere}
+    .user{background:#29264d;border:1px solid #51478f}
+    .ai{background:#0d1729;border:1px solid var(--line)}
+    .bubble small{display:block;color:#aeb8d0;font-size:11px;margin-bottom:4px}
+    .footer{text-align:center;color:var(--muted);font-size:12px;padding:10px}
+    @media(max-width:520px){.wrap{padding:12px 10px 30px}.hero,.panel{padding:15px;border-radius:16px}.row button{min-width:100%}.preview{height:430px}}
+  </style>
+</head>
+<body>
+<main class="wrap">
+  <header class="hero">
+    <span class="tag">PRO BUILDER • VERSION 9</span>
+    <h1>AI Tool Maker Pro 9 🤖</h1>
+    <p dir="rtl">صرف اپنا خیال ASK میں لکھیں۔ AI آپ کی ضرورت سمجھے گا، ضرورت پڑنے پر سوال کرے گا، پھر آپ کے لیے مکمل ٹول کا HTML تیار کرے گا۔</p>
+  </header>
+
+  <section class="panel">
+    <h2 dir="rtl">ASK — آپ کیا بنانا چاہتے ہیں؟</h2>
+    <p class="hint" dir="rtl">مثال: مجھے ایسا آن لائن ٹول بنانا ہے جس میں صارف اپنی فائل اپ لوڈ کرکے اسے تبدیل کر سکے۔</p>
+    <label for="prompt" dir="rtl">اپنی ہدایت یہاں لکھیں یا پیسٹ کریں</label>
+    <textarea id="prompt" dir="auto" placeholder="اپنا خیال یہاں لکھیں…"></textarea>
+    <div class="row" style="margin-top:9px">
+      <button type="button" id="pasteBtn">📋 Paste / پیسٹ</button>
+      <button type="button" id="clearBtn">صاف کریں</button>
+    </div>
+    <label for="language" dir="rtl">جواب کی زبان</label>
+    <select id="language">
+      <option value="Urdu">اردو</option>
+      <option value="Roman Urdu">Roman Urdu</option>
+      <option value="English">English</option>
+    </select>
+    <button class="primary" id="askBtn" type="button">ASK — آگے بڑھیں</button>
+    <div class="status" id="status" role="status" aria-live="polite">اپنا خیال لکھیں، پیسٹ کریں، پھر ASK دبائیں۔</div>
+  </section>
+
+  <section class="panel">
+    <div class="section-head">
+      <h2 dir="rtl">آپ کی AI گفتگو</h2>
+      <div class="tools"><button id="newBtn" type="button">نئی گفتگو</button></div>
+    </div>
+    <div id="history" class="history">
+      <div class="bubble ai" dir="auto"><small>AI Tool Maker</small>السلام علیکم! بتائیں آپ کون سا ٹول بنانا چاہتے ہیں؟ میں ضرورت کے مطابق سوال پوچھوں گا۔</div>
+    </div>
+  </section>
+
+  <section class="panel hidden" id="codePanel">
+    <div class="section-head">
+      <h2>تیار شدہ HTML ٹول</h2>
+      <div class="tools">
+        <button id="copyCodeBtn" type="button">کوڈ کاپی</button>
+        <button id="downloadBtn" type="button">HTML ڈاؤن لوڈ</button>
+      </div>
+    </div>
+    <p class="hint" dir="rtl">یہ HTML فائل آپ کے ٹول کا کوڈ ہے۔ اسے چلانے سے پہلے خود چیک کریں۔</p>
+    <pre class="answer" id="codeText" dir="ltr"></pre>
+    <div class="tools" style="margin:10px 0"><button id="previewBtn" type="button">ٹول کا Preview دکھائیں</button><button id="hidePreviewBtn" type="button" class="hidden">Preview بند کریں</button></div>
+    <iframe id="preview" class="preview hidden" title="Generated tool preview" sandbox="allow-forms allow-scripts"></iframe>
+  </section>
+  <footer class="footer" dir="rtl">AI Tool Maker Pro 9 • حقیقی AI کے لیے Cloudflare Worker اور Hugging Face کنکشن ضروری ہے۔</footer>
+</main>
+<script>
+(() => {
+  "use strict";
+
+  // Cloudflare Worker URL — محفوظ شدہ اصل URL
+  const WORKER_URL = "https://ai-tool-maker-backed.naveedahmad568344.workers.dev";
+  // Worker کے /api/chat راستے کو استعمال کریں
+  const API_URL = WORKER_URL.replace(/\/+$/, "") + "/api/chat";
+
+  const promptBox = document.getElementById("prompt");
+  const languageBox = document.getElementById("language");
+  const askBtn = document.getElementById("askBtn");
+  const statusBox = document.getElementById("status");
+  const historyBox = document.getElementById("history");
+  const codePanel = document.getElementById("codePanel");
+  const codeText = document.getElementById("codeText");
+  const preview = document.getElementById("preview");
+
+  let conversation = [];
+  let latestCode = "";
+
+  function setStatus(message, isError) {
+    statusBox.textContent = message;
+    statusBox.classList.toggle("error", !!isError);
+  }
+
+  function addBubble(role, message) {
+    const bubble = document.createElement("div");
+    bubble.className = "bubble " + (role === "user" ? "user" : "ai");
+    bubble.dir = "auto";
+    const small = document.createElement("small");
+    small.textContent = role === "user" ? "آپ" : "AI Tool Maker";
+    const content = document.createElement("div");
+    content.textContent = message;
+    bubble.append(small, content);
+    historyBox.appendChild(bubble);
+    bubble.scrollIntoView({behavior:"smooth", block:"end"});
+  }
+
+  function extractHtml(text) {
+    const fenced = text.match(/```(?:html)?\s*([\s\S]*?)```/i);
+    const candidate = fenced ? fenced[1].trim() : text.trim();
+    if (/<\s*!doctype\s+html|<\s*html[\s>]/i.test(candidate)) return candidate;
+    return "";
+  }
+
+  document.getElementById("pasteBtn").addEventListener("click", async () => {
+    try {
+      if (!navigator.clipboard || !navigator.clipboard.readText) throw new Error("clipboard unavailable");
+      const pasted = await navigator.clipboard.readText();
+      if (!pasted) { setStatus("Clipboard خالی ہے۔ پہلے متن Copy کریں۔", true); return; }
+      const start = promptBox.selectionStart ?? promptBox.value.length;
+      const end = promptBox.selectionEnd ?? promptBox.value.length;
+      promptBox.setRangeText(pasted, start, end, "end");
+      promptBox.focus();
+      setStatus("متن پیسٹ ہوگیا۔ اب ASK دبائیں۔");
+    } catch (_) {
+      setStatus("موبائل براؤزر نے Clipboard اجازت نہیں دی۔ خانے کو دیر تک دبائیں اور Paste منتخب کریں۔", true);
+      promptBox.focus();
+    }
+  });
+
+  document.getElementById("clearBtn").addEventListener("click", () => {
+    promptBox.value = "";
+    promptBox.focus();
+  });
+
+  document.getElementById("newBtn").addEventListener("click", () => {
+    conversation = [];
+    historyBox.innerHTML = "";
+    addBubble("assistant", "نئی گفتگو شروع ہوگئی۔ بتائیں آپ کیا بنانا چاہتے ہیں؟");
+    latestCode = "";
+    codePanel.classList.add("hidden");
+    preview.srcdoc = "";
+    setStatus("نئی گفتگو تیار ہے۔");
+    promptBox.focus();
+  });
+
+  askBtn.addEventListener("click", async () => {
+    const userPrompt = promptBox.value.trim();
+    if (!userPrompt) {
+      setStatus("پہلے اپنا خیال لکھیں یا Paste کریں۔", true);
+      promptBox.focus();
+      return;
+    }
+
+    addBubble("user", userPrompt);
+    conversation.push({role:"user", content:userPrompt});
+    promptBox.value = "";
+    askBtn.disabled = true;
+    askBtn.textContent = "AI سوچ رہا ہے…";
+    setStatus("آپ کی ہدایت AI کو بھیجی جا رہی ہے۔");
+
+    const systemGuide = [
+      "You are AI Tool Maker Pro 9, a universal software and web-tool builder.",
+      "Understand the user's goal. If essential details are missing, ask only the most important next question in the requested language. Continue the project across turns using the conversation context.",
+      "When enough details are known, create a complete, self-contained, responsive HTML file with embedded CSS and JavaScript. Do not limit the user to calculators, video creators, or preset categories.",
+      "Make practical assumptions when safe. Explain what the tool does and how to use it. If the user asks for a public live URL, explain that publishing requires deployment/hosting; never invent a live URL.",
+      "For generated HTML, put the complete file in one ```html code fence. Do not put secrets or API keys in browser code. Do not claim external services work unless configured.",
+      "Reply in the requested language."
+    ].join(" ");
+
+    const transcript = conversation.map(m => (m.role === "user" ? "USER: " : "ASSISTANT: ") + m.content).join("\n\n");
+    const fullPrompt = systemGuide + "\n\nRequested response language: " + languageBox.value + "\n\nConversation so far:\n" + transcript;
+
+    try {
+      const response = await fetch(API_URL, {
+        method:"POST",
+        headers:{"Content-Type":"application/json"},
+        body:JSON.stringify({prompt:fullPrompt, language:languageBox.value})
+      });
+
+      const raw = await response.text();
+      let data;
+      try {
+        data = JSON.parse(raw);
+      } catch (_) {
+        throw new Error("Worker کا جواب JSON نہیں ہے۔ Cloudflare میں /api/chat راستہ چیک کریں۔");
+      }
+
+      if (!response.ok || data.error) {
+        throw new Error(data.error || ("HTTP " + response.status));
+      }
+
+      // Worker عام طور پر {output} دیتا ہے؛ اضافی مطابقت کے لیے {html} بھی پڑھیں
+      const answer = typeof data.output === "string" ? data.output :
+                     typeof data.html === "string" ? data.html : "";
+
+      if (!answer.trim()) {
+        throw new Error("AI کا جواب خالی ہے۔ Hugging Face token اور Worker logs چیک کریں۔");
+      }
+
+      conversation.push({role:"assistant", content:answer});
+      addBubble("assistant", answer);
+
+      const htmlCode = extractHtml(answer);
+      if (htmlCode) {
+        latestCode = htmlCode;
+        codeText.textContent = htmlCode;
+        codePanel.classList.remove("hidden");
+        preview.classList.add("hidden");
+        document.getElementById("hidePreviewBtn").classList.add("hidden");
+        document.getElementById("previewBtn").classList.remove("hidden");
+        setStatus("مکمل HTML کوڈ تیار ہوگیا۔ آپ Preview یا Download کرسکتے ہیں۔");
+      } else {
+        setStatus("AI کا جواب آگیا۔ مزید تفصیل کے لیے اگلی ہدایت لکھیں۔");
+      }
+    } catch (error) {
+      // ناکامی کی صورت میں صارف کا سوال گفتگو اور خانے دونوں میں برقرار رہے گا
+      conversation.pop();
+      promptBox.value = userPrompt;
+      setStatus("کنکشن کی خرابی: " + (error.message || "نامعلوم مسئلہ") +
+        " — Worker URL، /api/chat، HF_TOKEN اور Hugging Face رسائی چیک کریں۔", true);
+    } finally {
+      askBtn.disabled = false;
+      askBtn.textContent = "ASK — آگے بڑھیں";
+    }
+  });
+
+  document.getElementById("copyCodeBtn").addEventListener("click", async () => {
+    if (!latestCode) return;
+    try {
+      await navigator.clipboard.writeText(latestCode);
+      setStatus("HTML کوڈ کاپی ہوگیا۔");
+    } catch (_) {
+      setStatus("کاپی کی اجازت نہیں ملی؛ کوڈ کو منتخب کرکے Copy کریں۔", true);
+    }
+  });
+
+  document.getElementById("downloadBtn").addEventListener("click", () => {
+    if (!latestCode) return;
+    const blob = new Blob([latestCode], {type:"text/html;charset=utf-8"});
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = "my-ai-tool.html";
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+    setTimeout(() => URL.revokeObjectURL(url), 1000);
+    setStatus("HTML فائل ڈاؤن لوڈ شروع ہوگئی۔");
+  });
+
+  document.getElementById("previewBtn").addEventListener("click", () => {
+    if (!latestCode) return;
+    preview.srcdoc = latestCode;
+    preview.classList.remove("hidden");
+    document.getElementById("previewBtn").classList.add("hidden");
+    document.getElementById("hidePreviewBtn").classList.remove("hidden");
+  });
+
+  document.getElementById("hidePreviewBtn").addEventListener("click", () => {
+    preview.classList.add("hidden");
+    document.getElementById("previewBtn").classList.remove("hidden");
+    document.getElementById("hidePreviewBtn").classList.add("hidden");
+  });
+})();
+</script>
+</body>
+</html>
