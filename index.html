@@ -1,0 +1,2069 @@
+<!doctype html>
+<html lang="ur" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#090e1c">
+<title>AI Tool Maker Pro 10 International</title>
+
+<style>
+:root{
+color-scheme:dark;
+--bg:#080d19;
+--panel:#141d32;
+--panel2:#0d1628;
+--line:#2b3959;
+--text:#f5f7ff;
+--muted:#aeb9d2;
+--accent:#8b78ff;
+--accent2:#5d4bd1;
+--good:#71dfba;
+--bad:#ff9baa
+}
+
+*{box-sizing:border-box}
+
+body{
+margin:0;
+min-height:100vh;
+background:
+radial-gradient(circle at top,#1b2850 0,#090e1c 52%),
+#090e1c;
+color:var(--text);
+font:16px/1.65 system-ui,-apple-system,
+"Noto Nastaliq Urdu","Noto Sans Arabic",sans-serif
+}
+
+button,input,textarea,select{font:inherit}
+button{cursor:pointer}
+button:disabled{opacity:.55;cursor:wait}
+
+.wrap{
+width:min(1050px,100%);
+margin:auto;
+padding:12px 10px 45px
+}
+
+.hero,.panel{
+background:rgba(20,29,50,.97);
+border:1px solid var(--line);
+border-radius:18px;
+padding:16px;
+margin-bottom:13px;
+box-shadow:0 12px 38px #0004
+}
+
+.hero{text-align:center}
+
+.tag{
+display:inline-block;
+padding:4px 11px;
+border-radius:30px;
+border:1px solid #51478f;
+background:#29244e;
+color:#d8d2ff;
+font-size:11px;
+font-weight:800
+}
+
+h1{
+margin:9px 0 4px;
+color:#c9c0ff;
+font-size:clamp(25px,6vw,37px);
+line-height:1.3
+}
+
+h2{
+margin:0 0 8px;
+font-size:19px
+}
+
+p{
+color:var(--muted);
+margin:5px 0
+}
+
+.hint{
+font-size:13px;
+color:var(--muted)
+}
+
+label{
+display:block;
+margin:12px 0 5px;
+font-weight:750
+}
+
+textarea,select,input{
+width:100%;
+border:1px solid var(--line);
+background:var(--panel2);
+color:var(--text);
+border-radius:13px;
+padding:12px;
+outline:none
+}
+
+textarea{
+min-height:130px;
+resize:vertical
+}
+
+textarea:focus,input:focus,select:focus{
+border-color:var(--accent);
+box-shadow:0 0 0 3px #8b78ff22
+}
+
+button{
+border:1px solid var(--line);
+border-radius:11px;
+padding:9px 13px;
+background:#263451;
+color:#fff;
+font-weight:750
+}
+
+button:hover{filter:brightness(1.08)}
+
+.primary{
+width:100%;
+margin-top:10px;
+border:0;
+background:linear-gradient(120deg,var(--accent),var(--accent2));
+font-size:17px;
+padding:12px
+}
+
+.row{
+display:flex;
+gap:8px;
+flex-wrap:wrap
+}
+
+.row button{
+flex:1;
+min-width:120px
+}
+
+.status{
+min-height:25px;
+margin-top:8px;
+color:var(--good);
+font-size:14px
+}
+
+.status.error{color:var(--bad)}
+
+.hidden{display:none!important}
+
+.section-head{
+display:flex;
+align-items:center;
+justify-content:space-between;
+gap:9px;
+flex-wrap:wrap
+}
+
+.tools{
+display:flex;
+gap:6px;
+flex-wrap:wrap
+}
+
+.tools button{
+font-size:12px;
+padding:7px 10px
+}
+
+.project-card{
+border:1px solid var(--line);
+background:#0d1628;
+border-radius:13px;
+padding:11px
+}
+
+.project-card strong{
+display:block;
+overflow:hidden;
+text-overflow:ellipsis;
+white-space:nowrap
+}
+
+.project-card small{
+color:var(--muted)
+}
+
+.project-grid{
+display:grid;
+grid-template-columns:repeat(3,1fr);
+gap:8px
+}
+
+.badge{
+display:inline-block;
+padding:3px 8px;
+border-radius:20px;
+background:#21375a;
+color:#a9d8ff;
+font-size:10px
+}
+
+.tool-face{
+background:#fff;
+border-radius:14px;
+overflow:hidden;
+border:1px solid var(--line)
+}
+
+.tool-top{
+background:#10182b;
+padding:10px;
+display:flex;
+align-items:center;
+justify-content:space-between;
+gap:8px;
+flex-wrap:wrap
+}
+
+.tool-name{font-weight:800}
+
+.link-box{
+display:flex;
+gap:6px;
+align-items:center;
+max-width:100%
+}
+
+.link-box input{
+direction:ltr;
+font-size:11px;
+padding:7px
+}
+
+.preview{
+width:100%;
+height:590px;
+border:0;
+background:white;
+display:block
+}
+
+.builder{
+border:1px solid #4b5f8d;
+background:linear-gradient(180deg,#121d35,#0d1628)
+}
+
+.builder-title{
+display:flex;
+align-items:center;
+gap:8px;
+margin-bottom:7px
+}
+
+.builder-icon{
+width:34px;
+height:34px;
+display:grid;
+place-items:center;
+border-radius:10px;
+background:#302866
+}
+
+.edit-area{min-height:105px}
+
+.share-info{
+border:1px solid #465b87;
+background:#101a31;
+border-radius:12px;
+padding:11px;
+margin-top:10px
+}
+
+.share-info strong{
+color:#d7d0ff
+}
+
+.public-mode{
+width:min(1100px,100%);
+margin:auto;
+padding:10px
+}
+
+.public-header{
+background:#10182b;
+border:1px solid #2b3959;
+border-radius:15px;
+padding:12px;
+margin-bottom:10px;
+display:flex;
+align-items:center;
+justify-content:space-between;
+gap:8px;
+flex-wrap:wrap
+}
+
+.public-title{
+font-weight:800;
+font-size:18px
+}
+
+.public-frame{
+width:100%;
+height:calc(100vh - 115px);
+min-height:650px;
+border:1px solid #2b3959;
+border-radius:15px;
+background:white;
+display:block
+}
+
+.public-actions{
+display:flex;
+gap:6px;
+flex-wrap:wrap
+}
+
+.footer{
+text-align:center;
+color:var(--muted);
+font-size:11px;
+padding:8px
+}
+
+@media(max-width:650px){
+.wrap{
+padding:9px 8px 28px
+}
+
+.hero,.panel{
+padding:13px;
+border-radius:15px
+}
+
+.row button{
+min-width:100%
+}
+
+.project-grid{
+grid-template-columns:1fr
+}
+
+.preview{
+height:540px
+}
+
+.link-box{
+width:100%
+}
+
+.public-frame{
+height:calc(100vh - 135px);
+min-height:560px
+}
+}
+</style>
+</head>
+
+<body>
+
+<!-- PUBLIC TOOL MODE -->
+<div id="publicMode" class="hidden">
+<div class="public-mode">
+
+<div class="public-header">
+
+<div>
+<div class="badge">AI TOOL • SHARED</div>
+<div id="publicTitle" class="public-title">AI Tool</div>
+</div>
+
+<div class="public-actions">
+<button id="publicCopyBtn">🔗 Link Copy</button>
+<button id="publicMakerBtn">🤖 AI Tool Maker</button>
+</div>
+
+</div>
+
+<iframe
+id="publicFrame"
+class="public-frame"
+title="Shared AI Tool"
+sandbox="allow-forms allow-scripts allow-downloads allow-modals allow-popups">
+</iframe>
+
+</div>
+</div>
+
+
+<!-- MAKER MODE -->
+<main id="makerMode" class="wrap">
+
+<header class="hero">
+
+<span class="tag">
+PRO BUILDER • VERSION 10 • INTERNATIONAL
+</span>
+
+<h1>
+🤖 AI Tool Maker Pro 10 International
+</h1>
+
+<p dir="rtl">
+صرف اپنا خیال لکھیں۔ ہر نئے ASK prompt سے ایک نیا الگ working tool بنے گا۔
+موجودہ tool کو صرف AI Builder سے edit کریں۔
+</p>
+
+</header>
+
+
+<section class="panel">
+
+<h2 dir="rtl">🚀 نیا Tool بنائیں</h2>
+
+<p class="hint" dir="rtl">
+ہر بار نیا prompt = نیا الگ Tool۔
+مثال: Calculator، Video Creator، Invoice Maker، Film Maker وغیرہ۔
+</p>
+
+<label for="prompt" dir="rtl">
+اپنی ہدایت لکھیں یا Paste کریں
+</label>
+
+<textarea
+id="prompt"
+dir="auto"
+placeholder="مثلاً: میرے لیے ایک AI Film Maker Tool بناؤ...">
+</textarea>
+
+<div class="row" style="margin-top:7px">
+
+<button id="pasteBtn" type="button">
+📋 Paste / پیسٹ
+</button>
+
+<button id="clearBtn" type="button">
+🗑 صاف کریں
+</button>
+
+</div>
+
+
+<label for="language" dir="rtl">
+AI جواب / Tool کی زبان
+</label>
+
+<select id="language">
+
+<option value="Urdu">
+اردو
+</option>
+
+<option value="Roman Urdu">
+Roman Urdu
+</option>
+
+<option value="English">
+English
+</option>
+
+</select>
+
+
+<button class="primary" id="askBtn" type="button">
+✨ نیا Tool بنائیں
+</button>
+
+<div class="status" id="status" role="status" aria-live="polite">
+اپنا خیال لکھیں اور نیا Tool بنائیں۔
+</div>
+
+</section>
+
+
+<section class="panel hidden" id="toolPanel">
+
+<div class="section-head">
+
+<div>
+
+<span class="badge">
+AI GENERATED • WORKING TOOL
+</span>
+
+<h2 id="projectTitle">
+آپ کا Tool
+</h2>
+
+<p id="projectDescription" class="hint" dir="auto"></p>
+
+</div>
+
+<div class="tools">
+
+<button id="saveBtn" type="button">
+💾 Save
+</button>
+
+<button id="downloadBtn" type="button">
+⬇ Download
+</button>
+
+<button id="copyLinkBtn" type="button">
+🔗 Link Copy
+</button>
+
+<button id="openPreviewBtn" type="button">
+👁 Preview
+</button>
+
+</div>
+
+</div>
+
+
+<div class="share-info">
+
+<strong>
+🔗 اس Tool کا الگ Share Link
+</strong>
+
+<p class="hint">
+یہ link کسی دوسرے user کو بھیجا جا سکتا ہے۔
+Link کھولنے پر صرف یہی Tool دکھایا جائے گا۔
+</p>
+
+<div class="link-box">
+
+<input
+id="previewLink"
+readonly
+value="">
+</div>
+
+</div>
+
+
+<div class="tool-face" style="margin-top:10px">
+
+<div class="tool-top">
+
+<div class="tool-name" id="faceTitle">
+AI Tool
+</div>
+
+<div class="badge">
+SEPARATE TOOL
+</div>
+
+</div>
+
+<iframe
+id="toolFrame"
+class="preview"
+title="AI Generated Tool"
+sandbox="allow-forms allow-scripts allow-downloads allow-modals allow-popups">
+</iframe>
+
+</div>
+
+</section>
+
+
+<section class="panel builder hidden" id="builderPanel">
+
+<div class="builder-title">
+
+<div class="builder-icon">
+🧠
+</div>
+
+<div>
+
+<h2 style="margin:0">
+AI Builder / Edit
+</h2>
+
+<div class="hint">
+یہاں موجودہ Tool میں تبدیلی کریں۔
+نیا ASK prompt دینے سے نیا Tool بنے گا۔
+</div>
+
+</div>
+
+</div>
+
+
+<label for="editPrompt" dir="rtl">
+موجودہ Tool میں کیا تبدیلی کرنی ہے؟
+</label>
+
+<textarea
+id="editPrompt"
+class="edit-area"
+dir="auto"
+placeholder="مثلاً: اس میں Download button شامل کرو۔">
+</textarea>
+
+
+<div class="row" style="margin-top:7px">
+
+<button id="builderPasteBtn" type="button">
+📋 Paste / پیسٹ
+</button>
+
+<button id="builderClearBtn" type="button">
+🗑 صاف کریں
+</button>
+
+</div>
+
+
+<button
+id="builderBtn"
+class="primary"
+type="button">
+🔨 AI سے موجودہ Tool Update کرو
+</button>
+
+
+<div id="builderStatus" class="status">
+اپنی تبدیلی لکھیں۔
+</div>
+
+</section>
+
+
+<section class="panel" id="savedPanel">
+
+<div class="section-head">
+
+<h2 dir="rtl">
+📁 میرے Tools
+</h2>
+
+<button id="refreshProjectsBtn" type="button">
+Refresh
+</button>
+
+</div>
+
+<div id="projects" class="project-grid"></div>
+
+</section>
+
+
+<footer class="footer" dir="rtl">
+AI Tool Maker Pro 10 International • GitHub → Cloudflare Pages → Cloudflare AI
+</footer>
+
+</main>
+
+
+<script>
+(()=>{
+
+"use strict";
+
+
+/* =========================================================
+   CONFIG
+========================================================= */
+
+const WORKER_URL =
+"https://ai-tool-maker-backed.naveedahmad568344.workers.dev";
+
+const API_URL =
+WORKER_URL + "/api/chat";
+
+const KEY =
+"ai_tool_maker_pro_10_international_projects_v2";
+
+
+/* =========================================================
+   ELEMENTS
+========================================================= */
+
+const makerMode =
+document.getElementById("makerMode");
+
+const publicMode =
+document.getElementById("publicMode");
+
+const promptBox =
+document.getElementById("prompt");
+
+const languageBox =
+document.getElementById("language");
+
+const askBtn =
+document.getElementById("askBtn");
+
+const statusBox =
+document.getElementById("status");
+
+const toolPanel =
+document.getElementById("toolPanel");
+
+const builderPanel =
+document.getElementById("builderPanel");
+
+const projectTitle =
+document.getElementById("projectTitle");
+
+const projectDescription =
+document.getElementById("projectDescription");
+
+const faceTitle =
+document.getElementById("faceTitle");
+
+const previewLink =
+document.getElementById("previewLink");
+
+const toolFrame =
+document.getElementById("toolFrame");
+
+const editPrompt =
+document.getElementById("editPrompt");
+
+const builderBtn =
+document.getElementById("builderBtn");
+
+const builderStatus =
+document.getElementById("builderStatus");
+
+
+let latestCode = "";
+let currentProject = null;
+
+
+/* =========================================================
+   STATUS
+========================================================= */
+
+function setStatus(message,error=false){
+
+statusBox.textContent = message;
+
+statusBox.classList.toggle(
+"error",
+!!error
+);
+
+}
+
+
+function setBuilderStatus(message,error=false){
+
+builderStatus.textContent = message;
+
+builderStatus.classList.toggle(
+"error",
+!!error
+);
+
+}
+
+
+/* =========================================================
+   TEXT HELPERS
+========================================================= */
+
+function makeName(prompt){
+
+let s =
+prompt
+.replace(/\s+/g," ")
+.trim();
+
+if(!s){
+return "My AI Tool";
+}
+
+return s.length <= 48
+?s
+:s.slice(0,45)+"...";
+
+}
+
+
+function makeDesc(prompt){
+
+let s =
+prompt
+.replace(/\s+/g," ")
+.trim();
+
+return s.length > 150
+?s.slice(0,147)+"..."
+:s;
+
+}
+
+
+/* =========================================================
+   HTML EXTRACTION
+========================================================= */
+
+function extractHtml(text){
+
+if(!text)return "";
+
+let match =
+text.match(
+/```(?:html)?\s*([\s\S]*?)```/i
+);
+
+let code =
+match
+?match[1].trim()
+:text.trim();
+
+let start =
+code.search(
+/<!doctype\s+html|<html[\s>]/i
+);
+
+if(start>0){
+code =
+code.slice(start);
+}
+
+let end =
+code.search(
+/<\/html>\s*$/i
+);
+
+if(end>=0){
+code =
+code.slice(0,end+7);
+}
+
+if(
+/<!doctype\s+html/i.test(code) ||
+/<html[\s>]/i.test(code)
+){
+return code.trim();
+}
+
+return "";
+
+}
+
+
+/* =========================================================
+   AI PROMPTS
+========================================================= */
+
+function newGuide(){
+
+return `
+
+You are AI Tool Maker Pro 10 International.
+
+NEW TOOL MODE.
+
+The user's current request is a completely NEW and SEPARATE web tool.
+
+IMPORTANT:
+Do NOT reuse, update, copy, or preserve any previous tool.
+
+Build a complete self-contained working HTML application.
+
+Requirements:
+
+- Complete HTML document
+- HTML + CSS + JavaScript
+- Responsive mobile and desktop
+- Professional UI
+- Working browser functionality where possible
+- No exposed secrets
+- No fake external API results
+- No unnecessary external dependencies
+- Make the tool genuinely useful
+- Return ONLY one complete HTML document
+- Put it inside exactly one html code fence
+- Do not explain the code
+- Do not return multiple files
+
+The user must receive a working tool, not source-code instructions.
+
+Requested language:
+${languageBox.value}
+
+CURRENT USER REQUEST:
+
+`;
+
+}
+
+
+function editGuide(){
+
+return `
+
+You are AI Tool Maker Pro 10 International.
+
+BUILDER EDIT MODE.
+
+Modify ONLY the existing working HTML according to the user's edit request.
+
+IMPORTANT:
+
+- Preserve the existing tool
+- Preserve useful existing features
+- Do not create an unrelated tool
+- Add or modify only what the user requests
+- Keep the tool fully functional
+- Return ONLY the complete updated HTML
+- Put it inside exactly one html code fence
+- Never expose secrets
+
+USER EDIT REQUEST:
+
+`;
+
+}
+
+
+/* =========================================================
+   AI CALL
+========================================================= */
+
+async function callAI(prompt){
+
+let response =
+await fetch(
+API_URL,
+{
+method:"POST",
+headers:{
+"Content-Type":"application/json"
+},
+body:JSON.stringify({
+prompt,
+language:languageBox.value
+})
+}
+);
+
+let raw =
+await response.text();
+
+let data;
+
+try{
+
+data =
+JSON.parse(raw);
+
+}catch(error){
+
+throw new Error(
+"Worker نے JSON جواب نہیں دیا۔ /api/chat چیک کریں۔"
+);
+
+}
+
+if(!response.ok){
+
+throw new Error(
+data.error ||
+("HTTP "+response.status)
+);
+
+}
+
+let output =
+typeof data.output === "string"
+?data.output
+:typeof data.response === "string"
+?data.response
+:"";
+
+if(!output.trim()){
+
+throw new Error(
+"AI نے خالی جواب دیا۔"
+);
+
+}
+
+return output;
+
+}
+
+
+/* =========================================================
+   UNIQUE TOOL ID
+========================================================= */
+
+function createToolId(){
+
+return (
+"tool_" +
+Date.now().toString(36) +
+"_" +
+Math.random()
+.toString(36)
+.slice(2,8)
+);
+
+}
+
+
+/* =========================================================
+   BASE64 URL SAFE ENCODING
+========================================================= */
+
+function utf8ToBase64(text){
+
+const bytes =
+new TextEncoder().encode(text);
+
+let binary = "";
+
+const chunk = 0x8000;
+
+for(
+let i=0;
+i<bytes.length;
+i+=chunk
+){
+
+binary += String.fromCharCode(
+...bytes.subarray(i,i+chunk)
+);
+
+}
+
+return btoa(binary);
+
+}
+
+
+function base64ToUtf8(base64){
+
+const binary =
+atob(base64);
+
+const bytes =
+new Uint8Array(binary.length);
+
+for(
+let i=0;
+i<binary.length;
+i++
+){
+
+bytes[i] =
+binary.charCodeAt(i);
+
+}
+
+return new TextDecoder()
+.decode(bytes);
+
+}
+
+
+function toUrlSafe(value){
+
+return value
+.replace(/\+/g,"-")
+.replace(/\//g,"_")
+.replace(/=/g,"");
+
+}
+
+
+function fromUrlSafe(value){
+
+value =
+value
+.replace(/-/g,"+")
+.replace(/_/g,"/");
+
+while(
+value.length % 4
+){
+value += "=";
+}
+
+return value;
+
+}
+
+
+/* =========================================================
+   SHARE LINK
+========================================================= */
+
+function buildShareLink(project){
+
+let payload = {
+
+id:project.id,
+
+name:project.name,
+
+description:project.description,
+
+html:project.html
+
+};
+
+let encoded =
+toUrlSafe(
+utf8ToBase64(
+JSON.stringify(payload)
+)
+);
+
+return (
+location.origin +
+location.pathname +
+"#tool=" +
+encoded
+);
+
+}
+
+
+/* =========================================================
+   READ SHARED TOOL
+========================================================= */
+
+function getSharedTool(){
+
+let hash =
+location.hash || "";
+
+if(
+!hash.startsWith("#tool=")
+){
+
+return null;
+
+}
+
+try{
+
+let encoded =
+hash.slice(6);
+
+let json =
+base64ToUtf8(
+fromUrlSafe(encoded)
+);
+
+return JSON.parse(json);
+
+}catch(error){
+
+console.error(error);
+
+return null;
+
+}
+
+
+/* =========================================================
+   PUBLIC MODE
+========================================================= */
+
+function showPublicTool(project){
+
+if(!project || !project.html){
+
+return false;
+
+}
+
+makerMode.classList.add("hidden");
+
+publicMode.classList.remove("hidden");
+
+document.title =
+(project.name || "AI Tool") +
+" • AI Tool Maker Pro 10";
+
+document.getElementById(
+"publicTitle"
+).textContent =
+project.name ||
+"AI Tool";
+
+const publicFrame =
+document.getElementById(
+"publicFrame"
+);
+
+publicFrame.srcdoc =
+project.html;
+
+
+/* Copy link */
+
+document.getElementById(
+"publicCopyBtn"
+).onclick =
+async function(){
+
+try{
+
+await navigator.clipboard.writeText(
+location.href
+);
+
+alert("🔗 Tool link copy ہوگیا۔");
+
+}catch(error){
+
+alert(
+"Link copy نہیں ہوا۔ Browser میں address bar سے link copy کریں۔"
+);
+
+}
+
+};
+
+
+/* Back to maker */
+
+document.getElementById(
+"publicMakerBtn"
+).onclick =
+function(){
+
+location.hash = "";
+
+location.reload();
+
+};
+
+return true;
+
+}
+
+
+/* =========================================================
+   CREATE NEW PROJECT
+========================================================= */
+
+function createNew(prompt,html){
+
+currentProject = {
+
+id:createToolId(),
+
+name:makeName(prompt),
+
+description:makeDesc(prompt),
+
+html:html,
+
+createdAt:
+new Date().toISOString(),
+
+updatedAt:
+new Date().toISOString()
+
+};
+
+latestCode =
+html;
+
+renderTool();
+
+}
+
+
+/* =========================================================
+   RENDER TOOL
+========================================================= */
+
+function renderTool(){
+
+if(
+!latestCode ||
+!currentProject
+){
+
+return;
+
+}
+
+toolFrame.srcdoc =
+latestCode;
+
+projectTitle.textContent =
+currentProject.name;
+
+faceTitle.textContent =
+currentProject.name;
+
+projectDescription.textContent =
+currentProject.description ||
+"";
+
+previewLink.value =
+buildShareLink(currentProject);
+
+toolPanel.classList.remove("hidden");
+
+builderPanel.classList.remove("hidden");
+
+}
+
+
+/* =========================================================
+   NEW TOOL
+========================================================= */
+
+askBtn.addEventListener(
+"click",
+async function(){
+
+let prompt =
+promptBox.value.trim();
+
+if(!prompt){
+
+setStatus(
+"پہلے اپنا خیال لکھیں یا Paste کریں۔",
+true
+);
+
+promptBox.focus();
+
+return;
+
+}
+
+askBtn.disabled = true;
+
+askBtn.textContent =
+"AI نیا Tool بنا رہا ہے…";
+
+setStatus(
+"نیا الگ Tool تیار کیا جا رہا ہے…"
+);
+
+toolPanel.classList.add("hidden");
+
+builderPanel.classList.add("hidden");
+
+latestCode = "";
+
+currentProject = null;
+
+toolFrame.srcdoc = "";
+
+try{
+
+let answer =
+await callAI(
+newGuide()+prompt
+);
+
+let html =
+extractHtml(answer);
+
+if(!html){
+
+throw new Error(
+"AI نے مکمل HTML Tool واپس نہیں دیا۔"
+);
+
+}
+
+createNew(
+prompt,
+html
+);
+
+setStatus(
+"🎉 نیا الگ Tool تیار ہوگیا۔ Link Copy کرکے share کریں۔"
+);
+
+}catch(error){
+
+setStatus(
+"❌ Tool بنانے میں خرابی: "+
+error.message,
+true
+);
+
+}finally{
+
+askBtn.disabled = false;
+
+askBtn.textContent =
+"✨ نیا Tool بنائیں";
+
+}
+
+});
+
+
+/* =========================================================
+   BUILDER
+========================================================= */
+
+builderBtn.addEventListener(
+"click",
+async function(){
+
+let edit =
+editPrompt.value.trim();
+
+if(!edit){
+
+setBuilderStatus(
+"پہلے تبدیلی لکھیں۔",
+true
+);
+
+return;
+
+}
+
+if(!latestCode || !currentProject){
+
+setBuilderStatus(
+"پہلے ایک Tool بنائیں۔",
+true
+);
+
+return;
+
+}
+
+builderBtn.disabled = true;
+
+builderBtn.textContent =
+"🔨 Tool Update ہو رہا ہے…";
+
+setBuilderStatus(
+"موجودہ Tool کو update کیا جا رہا ہے…"
+);
+
+try{
+
+let answer =
+await callAI(
+editGuide() +
+edit +
+"\n\nEXISTING TOOL HTML:\n" +
+latestCode
+);
+
+let html =
+extractHtml(answer);
+
+if(!html){
+
+throw new Error(
+"AI نے updated HTML واپس نہیں دیا۔"
+);
+
+}
+
+latestCode =
+html;
+
+currentProject.html =
+html;
+
+currentProject.updatedAt =
+new Date().toISOString();
+
+renderTool();
+
+editPrompt.value = "";
+
+setBuilderStatus(
+"✅ موجودہ Tool update ہوگیا۔"
+);
+
+setStatus(
+"Builder نے موجودہ Tool میں تبدیلی کردی۔"
+);
+
+}catch(error){
+
+setBuilderStatus(
+"❌ Builder error: "+
+error.message,
+true
+);
+
+}finally{
+
+builderBtn.disabled = false;
+
+builderBtn.textContent =
+"🔨 AI سے موجودہ Tool Update کرو";
+
+}
+
+});
+
+
+/* =========================================================
+   PASTE
+========================================================= */
+
+async function pasteInto(element){
+
+try{
+
+if(
+!navigator.clipboard ||
+!navigator.clipboard.readText
+){
+
+throw new Error();
+
+}
+
+let text =
+await navigator.clipboard.readText();
+
+if(!text){
+
+throw new Error();
+
+}
+
+let start =
+element.selectionStart ??
+element.value.length;
+
+let end =
+element.selectionEnd ??
+element.value.length;
+
+element.setRangeText(
+text,
+start,
+end,
+"end"
+);
+
+element.focus();
+
+return true;
+
+}catch(error){
+
+element.focus();
+
+return false;
+
+}
+
+}
+
+
+document.getElementById(
+"pasteBtn"
+).onclick =
+async function(){
+
+let ok =
+await pasteInto(promptBox);
+
+setStatus(
+ok
+?"📋 Text کامیابی سے Paste ہوگیا۔"
+:"Browser نے Clipboard اجازت نہیں دی۔ Text box پر دیر تک دبائیں اور Paste منتخب کریں۔",
+!ok
+);
+
+};
+
+
+document.getElementById(
+"builderPasteBtn"
+).onclick =
+async function(){
+
+let ok =
+await pasteInto(editPrompt);
+
+setBuilderStatus(
+ok
+?"📋 Text کامیابی سے Paste ہوگیا۔"
+:"Browser نے Clipboard اجازت نہیں دی۔ Text box پر دیر تک دبائیں اور Paste منتخب کریں۔",
+!ok
+);
+
+};
+
+
+/* =========================================================
+   CLEAR
+========================================================= */
+
+document.getElementById(
+"clearBtn"
+).onclick =
+function(){
+
+promptBox.value = "";
+
+promptBox.focus();
+
+};
+
+
+document.getElementById(
+"builderClearBtn"
+).onclick =
+function(){
+
+editPrompt.value = "";
+
+editPrompt.focus();
+
+};
+
+
+/* =========================================================
+   DOWNLOAD
+========================================================= */
+
+function downloadTool(){
+
+if(!latestCode){
+
+setStatus(
+"پہلے Tool بنائیں۔",
+true
+);
+
+return;
+
+}
+
+let blob =
+new Blob(
+[latestCode],
+{
+type:"text/html;charset=utf-8"
+}
+);
+
+let url =
+URL.createObjectURL(blob);
+
+let link =
+document.createElement("a");
+
+link.href = url;
+
+let filename =
+(currentProject?.name ||
+"my-ai-tool")
+.replace(
+/[^\w\-]+/g,
+"-"
+)
+.replace(
+/^-+|-+$/g,
+""
+);
+
+link.download =
+(filename || "my-ai-tool") +
+".html";
+
+document.body.appendChild(link);
+
+link.click();
+
+link.remove();
+
+setTimeout(
+()=>URL.revokeObjectURL(url),
+1000
+);
+
+}
+
+
+document.getElementById(
+"downloadBtn"
+).onclick =
+downloadTool;
+
+
+/* =========================================================
+   COPY SHARE LINK
+========================================================= */
+
+document.getElementById(
+"copyLinkBtn"
+).onclick =
+async function(){
+
+if(
+!currentProject
+){
+
+setStatus(
+"پہلے Tool بنائیں۔",
+true
+);
+
+return;
+
+}
+
+let link =
+buildShareLink(
+currentProject
+);
+
+previewLink.value =
+link;
+
+try{
+
+await navigator.clipboard.writeText(
+link
+);
+
+setStatus(
+"🔗 الگ Tool کا Share Link copy ہوگیا۔"
+);
+
+}catch(error){
+
+previewLink.select();
+
+setStatus(
+"Link select ہوگیا۔ Copy کر لیں۔"
+);
+
+}
+
+};
+
+
+/* =========================================================
+   PREVIEW
+========================================================= */
+
+document.getElementById(
+"openPreviewBtn"
+).onclick =
+function(){
+
+if(latestCode){
+
+toolPanel.scrollIntoView({
+behavior:"smooth"
+});
+
+renderTool();
+
+}
+
+};
+
+
+/* =========================================================
+   LOCAL STORAGE
+========================================================= */
+
+function getProjects(){
+
+try{
+
+return JSON.parse(
+localStorage.getItem(KEY) ||
+"[]"
+);
+
+}catch(error){
+
+return [];
+
+}
+
+}
+
+
+function saveProjects(projects){
+
+localStorage.setItem(
+KEY,
+JSON.stringify(projects)
+);
+
+}
+
+
+/* =========================================================
+   RENDER SAVED PROJECTS
+========================================================= */
+
+function renderProjects(){
+
+let box =
+document.getElementById(
+"projects"
+);
+
+let projects =
+getProjects();
+
+box.innerHTML = "";
+
+if(!projects.length){
+
+let empty =
+document.createElement("div");
+
+empty.className =
+"project-card";
+
+empty.textContent =
+"ابھی کوئی saved tool نہیں۔";
+
+box.appendChild(empty);
+
+return;
+
+}
+
+
+projects.forEach(
+function(project){
+
+let card =
+document.createElement("div");
+
+card.className =
+"project-card";
+
+
+let strong =
+document.createElement("strong");
+
+strong.textContent =
+project.name ||
+"My Tool";
+
+
+let small =
+document.createElement("small");
+
+small.textContent =
+project.description ||
+"Saved AI Tool";
+
+
+let actions =
+document.createElement("div");
+
+actions.className =
+"tools";
+
+
+let openBtn =
+document.createElement("button");
+
+openBtn.textContent =
+"Open";
+
+openBtn.onclick =
+function(){
+
+currentProject =
+{...project};
+
+latestCode =
+project.html ||
+"";
+
+renderTool();
+
+setStatus(
+"Saved Tool کھل گیا۔"
+);
+
+};
+
+
+let linkBtn =
+document.createElement("button");
+
+linkBtn.textContent =
+"🔗 Link";
+
+linkBtn.onclick =
+async function(){
+
+let link =
+buildShareLink(project);
+
+try{
+
+await navigator.clipboard.writeText(
+link
+);
+
+alert(
+"🔗 Tool link copy ہوگیا۔"
+);
+
+}catch(error){
+
+prompt(
+"Tool Link:",
+link
+);
+
+}
+
+};
+
+
+let deleteBtn =
+document.createElement("button");
+
+deleteBtn.textContent =
+"Delete";
+
+deleteBtn.onclick =
+function(){
+
+let updated =
+getProjects()
+.filter(
+x=>x.id!==project.id
+);
+
+saveProjects(updated);
+
+renderProjects();
+
+};
+
+
+actions.appendChild(openBtn);
+
+actions.appendChild(linkBtn);
+
+actions.appendChild(deleteBtn);
+
+card.appendChild(strong);
+
+card.appendChild(small);
+
+card.appendChild(actions);
+
+box.appendChild(card);
+
+}
+
+);
+
+}
+
+
+/* =========================================================
+   SAVE CURRENT TOOL
+========================================================= */
+
+document.getElementById(
+"saveBtn"
+).onclick =
+function(){
+
+if(
+!latestCode ||
+!currentProject
+){
+
+setStatus(
+"پہلے Tool بنائیں۔",
+true
+);
+
+return;
+
+}
+
+let projects =
+getProjects();
+
+let index =
+projects.findIndex(
+x=>x.id===currentProject.id
+);
+
+if(index>=0){
+
+projects[index] =
+{
+...currentProject
+};
+
+}else{
+
+projects.unshift(
+{
+...currentProject
+}
+);
+
+}
+
+saveProjects(projects);
+
+renderProjects();
+
+setStatus(
+"✅ Tool browser میں محفوظ ہوگیا۔"
+);
+
+};
+
+
+/* =========================================================
+   REFRESH
+========================================================= */
+
+document.getElementById(
+"refreshProjectsBtn"
+).onclick =
+renderProjects;
+
+
+/* =========================================================
+   START
+========================================================= */
+
+if(
+getSharedTool()
+){
+
+showPublicTool(
+getSharedTool()
+);
+
+}else{
+
+renderProjects();
+
+}
+
+})();
+</script>
+
+</body>
+</html>
