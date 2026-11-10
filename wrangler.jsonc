@@ -1,0 +1,17 @@
+
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "ai-tool-maker-backed",
+  "main": "worker.js",
+  "compatibility_date": "2026-11-10",
+  "workers_dev": true,
+  "ai": {
+    "binding": "AI"
+  },
+  "kv_namespaces": [
+    {
+      "binding": "TOOLS_KV",
+      "id": "YAHAN_APNI_ASLI_KV_ID_LAGAYEN"
+    }
+  ]
+}
