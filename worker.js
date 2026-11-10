@@ -1,0 +1,438 @@
+
+const MODEL = "@cf/google/gemma-4-26b-a4b-it";
+
+export default {
+  async fetch(request, env) {
+    const url = new URL(request.url);
+    const path = url.pathname.replace(/\/+$/, "") || "/";
+
+    const headers = {
+      "Access-Control-Allow-Origin": "*",
+      "Access-Control-Allow-Methods": "GET, POST, PUT, OPTIONS",
+      "Access-Control-Allow-Headers": "Content-Type, Authorization",
+      "Access-Control-Max-Age": "86400",
+      "Cache-Control": "no-store"
+    };
+
+    function json(data, status = 200) {
+      return new Response(JSON.stringify(data), {
+        status,
+        headers: {
+          ...headers,
+          "Content-Type": "application/json; charset=utf-8"
+        }
+      });
+    }
+
+    function htmlResponse(content, status = 200) {
+      return new Response(content, {
+        status,
+        headers: {
+          ...headers,
+          "Content-Type": "text/html; charset=utf-8",
+          "X-Content-Type-Options": "nosniff",
+          "Content-Security-Policy": "frame-ancestors *"
+        }
+      });
+    }
+
+    function errorResponse(error, status = 500, detail = "") {
+      return json({
+        ok: false,
+        error,
+        detail: String(detail || "").slice(0, 1500)
+      }, status);
+    }
+
+    async function readBody() {
+      try {
+        return await request.json();
+      } catch {
+        throw new Error("درست JSON درخواست موصول نہیں ہوئی۔");
+      }
+    }
+
+    function getAIOutput(result) {
+      if (typeof result === "string") return result;
+
+      if (typeof result?.response === "string") {
+        return result.response;
+      }
+
+      if (typeof result?.output_text === "string") {
+        return result.output_text;
+      }
+
+      if (typeof result?.result?.response === "string") {
+        return result.result.response;
+      }
+
+      if (typeof result?.choices?.[0]?.message?.content === "string") {
+        return result.choices[0].message.content;
+      }
+
+      if (Array.isArray(result?.content)) {
+        return result.content
+          .map(item => item?.text || "")
+          .join("\n");
+      }
+
+      return "";
+    }
+
+    if (request.method === "OPTIONS") {
+      return new Response(null, {
+        status: 204,
+        headers
+      });
+    }
+
+    // SERVER HEALTH CHECK
+    if (path === "/" && request.method === "GET") {
+      return json({
+        ok: true,
+        message: "AI Tool Maker Pro 10 Backend Running",
+        version: "2.0",
+        ai: !!env.AI,
+        toolsKV: !!env.TOOLS_KV,
+        model: MODEL,
+        routes: [
+          "/api/chat",
+          "/api/tools",
+          "/tool/TOOL_ID"
+        ]
+      });
+    }
+
+    // AI CHAT API
+    if (path === "/api/chat" && request.method === "POST") {
+      try {
+        if (!env.AI) {
+          return errorResponse(
+            "Cloudflare AI binding missing. wrangler.jsonc میں AI binding چیک کریں۔",
+            500
+          );
+        }
+
+        const body = await readBody();
+
+        const prompt = String(
+          body.prompt || body.message || ""
+        ).trim();
+
+        const language = String(
+          body.language || "Urdu"
+        );
+
+        if (!prompt) {
+          return errorResponse("Prompt خالی ہے۔", 400);
+        }
+
+        if (prompt.length > 30000) {
+          return errorResponse("Prompt بہت لمبا ہے۔", 413);
+        }
+
+        const systemPrompt = `
+You are AI Tool Maker Pro 10 International.
+
+You are an expert professional web application developer.
+
+Your task is to create a complete, working browser-based application.
+
+RULES:
+
+1. Return a complete HTML document.
+2. Include HTML, CSS and JavaScript in one file.
+3. Begin your response with <!DOCTYPE html>.
+4. Create a professional responsive mobile-friendly design.
+5. Make every button and feature functional.
+6. Do not provide fake AI integrations.
+7. Do not claim that an external service works without a real API.
+8. Follow the user's requested features carefully.
+9. Do not remove requested features.
+10. Use this language: ${language}.
+11. Return HTML only. Do not add explanations outside the HTML.
+`;
+
+        const result = await env.AI.run(MODEL, {
+          messages: [
+            {
+              role: "system",
+              content: systemPrompt
+            },
+            {
+              role: "user",
+              content: prompt
+            }
+          ],
+          max_tokens: 4096
+        });
+
+        const output = String(
+          getAIOutput(result) || ""
+        ).trim();
+
+        if (!output) {
+          return errorResponse(
+            "Cloudflare AI نے خالی جواب دیا۔",
+            502,
+            JSON.stringify(result)
+          );
+        }
+
+        return json({
+          ok: true,
+          output,
+          response: output,
+          text: output
+        });
+
+      } catch (error) {
+        return errorResponse(
+          "AI request failed",
+          500,
+          error.message || error
+        );
+      }
+    }
+
+    // CHECK KV
+    const isToolsRoute =
+      path === "/api/tools" ||
+      path.startsWith("/api/tools/");
+
+    if (isToolsRoute) {
+      if (!env.TOOLS_KV) {
+        return errorResponse(
+          "TOOLS_KV binding missing. Cloudflare KV کو Worker سے جوڑیں۔",
+          500
+        );
+      }
+
+      // CREATE NEW TOOL
+      if (
+        path === "/api/tools" &&
+        request.method === "POST"
+      ) {
+        try {
+          const body = await readBody();
+
+          const html = String(body.html || "").trim();
+
+          if (
+            !/<html[\s>]/i.test(html) ||
+            !/<\/html>/i.test(html)
+          ) {
+            return errorResponse(
+              "درست مکمل HTML Tool موصول نہیں ہوا۔",
+              400
+            );
+          }
+
+          const id = "tool_" + crypto.randomUUID();
+
+          const now = new Date().toISOString();
+
+          const tool = {
+            id,
+            name: String(body.name || "AI Tool").slice(0, 150),
+            description: String(body.description || "").slice(0, 1000),
+            html,
+            createdAt: now,
+            updatedAt: now
+          };
+
+          await env.TOOLS_KV.put(
+            "tool:" + id,
+            JSON.stringify(tool)
+          );
+
+          const publicUrl =
+            url.origin + "/tool/" + encodeURIComponent(id);
+
+          return json({
+            ok: true,
+            id,
+            tool,
+            url: publicUrl,
+            publicUrl
+          }, 201);
+
+        } catch (error) {
+          return errorResponse(
+            "Tool save failed",
+            500,
+            error.message || error
+          );
+        }
+      }
+
+      // GET OR UPDATE TOOL
+      const prefix = "/api/tools/";
+
+      let id = "";
+
+      if (path.startsWith(prefix)) {
+        try {
+          id = decodeURIComponent(
+            path.slice(prefix.length)
+          ).trim();
+        } catch {
+          return errorResponse("Invalid Tool ID.", 400);
+        }
+      }
+
+      if (!id || id.includes("/")) {
+        return errorResponse("Tool ID غلط ہے۔", 400);
+      }
+
+      // GET EXISTING TOOL
+      if (request.method === "GET") {
+        try {
+          const value = await env.TOOLS_KV.get("tool:" + id);
+
+          if (!value) {
+            return errorResponse("Tool نہیں ملا۔", 404);
+          }
+
+          const tool = JSON.parse(value);
+
+          const publicUrl =
+            url.origin + "/tool/" + encodeURIComponent(id);
+
+          return json({
+            ok: true,
+            id,
+            tool,
+            url: publicUrl,
+            publicUrl
+          });
+
+        } catch (error) {
+          return errorResponse(
+            "Tool fetch failed",
+            500,
+            error.message || error
+          );
+        }
+      }
+
+      // UPDATE EXISTING TOOL
+      if (request.method === "PUT") {
+        try {
+          const value = await env.TOOLS_KV.get("tool:" + id);
+
+          if (!value) {
+            return errorResponse("Tool نہیں ملا۔", 404);
+          }
+
+          const old = JSON.parse(value);
+          const body = await readBody();
+
+          const html = String(
+            body.html ?? old.html
+          ).trim();
+
+          if (
+            !/<html[\s>]/i.test(html) ||
+            !/<\/html>/i.test(html)
+          ) {
+            return errorResponse(
+              "Updated HTML درست نہیں۔",
+              400
+            );
+          }
+
+          const updated = {
+            ...old,
+            name: String(body.name ?? old.name).slice(0, 150),
+            description: String(
+              body.description ?? old.description
+            ).slice(0, 1000),
+            html,
+            updatedAt: new Date().toISOString()
+          };
+
+          await env.TOOLS_KV.put(
+            "tool:" + id,
+            JSON.stringify(updated)
+          );
+
+          const publicUrl =
+            url.origin + "/tool/" + encodeURIComponent(id);
+
+          return json({
+            ok: true,
+            id,
+            tool: updated,
+            url: publicUrl,
+            publicUrl
+          });
+
+        } catch (error) {
+          return errorResponse(
+            "Tool update failed",
+            500,
+            error.message || error
+          );
+        }
+      }
+
+      return errorResponse(
+        "Method not allowed",
+        405
+      );
+    }
+
+    // PUBLIC TOOL
+    if (
+      path.startsWith("/tool/") &&
+      request.method === "GET"
+    ) {
+      try {
+        if (!env.TOOLS_KV) {
+          return htmlResponse(
+            "Error: TOOLS_KV binding missing.",
+            500
+          );
+        }
+
+        let id;
+
+        try {
+          id = decodeURIComponent(
+            path.slice("/tool/".length)
+          );
+        } catch {
+          return htmlResponse("Invalid Tool ID", 400);
+        }
+
+        if (!id || id.includes("/")) {
+          return htmlResponse("Invalid Tool ID", 400);
+        }
+
+        const value = await env.TOOLS_KV.get("tool:" + id);
+
+        if (!value) {
+          return htmlResponse("Tool نہیں ملا۔", 404);
+        }
+
+        const tool = JSON.parse(value);
+
+        return htmlResponse(tool.html);
+
+      } catch (error) {
+        return htmlResponse(
+          "Tool Error: " + (error.message || error),
+          500
+        );
+      }
+    }
+
+    return errorResponse(
+      "Route not found",
+      404,
+      path
+    );
+  }
+};
